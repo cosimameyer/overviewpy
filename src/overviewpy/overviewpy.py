@@ -1,7 +1,21 @@
 import matplotlib.pyplot as plt
+import matplotlib.figure
 import pandas as pd
 
-def overview_tab(df, id, time):
+def overview_tab(df: pd.DataFrame, id: str, time: str) -> pd.DataFrame:
+    """Generates a tabular overview of the sample (and returns a data frame). 
+    The general sample plots a two-column table that provides information on an 
+    id in the left column and a the time frame on the right column.
+
+    Args:
+        df (pd.DataFrame): Input data frame
+        id (str): Identifies the id column (for instance, country)
+        time (str): Identifies the time column (for instance, years)
+
+    Returns:
+        pd.DataFrame: Returns a reduced data frame that shows a cohesive
+        overview of the data frame
+    """
 
     df2 = df.dropna(subset=['id']).copy()
     if len(df2) != len(df):
@@ -54,7 +68,15 @@ def overview_tab(df, id, time):
     else:
         print("There are some duplicates. Make sure to aggregate first.")
             
-def overview_na(df):
+def overview_na(df: pd.DataFrame) -> matplotlib.figure.Figure:
+    """Plots an overview of missing values by variable.
+
+    Args:
+        df (pd.DataFrame): Input data frame
+
+    Returns:
+        matplotlib.figure.Figure: Bar plot visualizing the number of missing values per variable
+    """
     ax = df.isna().sum().plot(kind="barh")
     ax.set_xlabel("Count")
     ax.set_ylabel("Columns")
