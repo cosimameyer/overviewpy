@@ -1,4 +1,4 @@
-# overviewpy <img src='https://github.com/cosimameyer/overviewpy/blob/main/docs/img/overviewpy.png' align="right" height="139" />
+# overviewpy <img src='https://raw.githubusercontent.com/cosimameyer/overviewpy/main/docs/img/overviewpy.png' align="right" height="139" />
 
 Easily Extracting Information About Your Data
 
