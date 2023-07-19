@@ -10,21 +10,12 @@ $ pip install overviewpy
 
 ## Usage
 
-The goal of `overviewpy` is to make it easy to get an overview of a data
-set by displaying relevant sample information. At the moment, there are
-the following functions:
+### Current Functions
+The goal of `overviewpy` is to make it easy to get an overview of a data set by displaying relevant sample information. At the moment, there are the following functions:
 
 -   `overview_tab` generates a tabular overview of the sample (and returns a data frame). The general sample plots a two-column table that provides information on an id in the left column and a the time frame on the right column.
 -   `overview_na` plots an overview of missing values by variable (both by row and by column)
 
-`overviewpy` seeks to mirror the functionality of `overviewR` and will extend its features with the following functionality in the future:
-
--   `overview_crosstab` generates a cross table. The conditional column allows to disaggregate the overview table by specifying two conditions, hence resulting a 2x2 table. This way, it is easy to visualize the time and scope conditions as well as theoretical assumptions with examples from the data set.
--   `overview_latex` converts the output of both `overview_tab` and `overview_crosstab` into LaTeX code and/or directly into a .tex file.
--   `overview_plot` is an alternative to visualize the sample (a way to present results from `overview_tab`)
--   `overview_crossplot` is an alternative to visualize a cross table (a way to present results from `overview_crosstab`)
--   `overview_heat` plots a heat map of your time line
--   `overview_overlap` plots comparison plots (bar graph and Venn diagram) to compare to data frames
 
 #### `overview_tab`
 
@@ -70,6 +61,17 @@ df_na = pd.DataFrame(data_na)
 overview_na(df_na)
 
 ```
+
+### Roadmap
+`overviewpy` seeks to mirror the functionality of [`overviewR`](https://github.com/cosimameyer/overviewR) and will extend its features with the following functionality in the future:
+
+-   `overview_crosstab` generates a cross table. The conditional column allows to disaggregate the overview table by specifying two conditions, hence resulting a 2x2 table. This way, it is easy to visualize the time and scope conditions as well as theoretical assumptions with examples from the data set.
+-   `overview_latex` converts the output of both `overview_tab` and `overview_crosstab` into LaTeX code and/or directly into a .tex file.
+-   `overview_plot` is an alternative to visualize the sample (a way to present results from `overview_tab`)
+-   `overview_crossplot` is an alternative to visualize a cross table (a way to present results from `overview_crosstab`)
+-   `overview_heat` plots a heat map of your time line
+-   `overview_overlap` plots comparison plots (bar graph and Venn diagram) to compare to data frames
+
 ## Contributing
 
 Interested in contributing? Check out the [contributing guidelines](/CONTRIBUTING.md). Please note that this project is released with a [Code of Conduct](/CONDUCT.md). By contributing to this project, you agree to abide by its terms.
