@@ -1,0 +1,49 @@
+:py:mod:`overviewpy.overviewpy`
+===============================
+
+.. py:module:: overviewpy.overviewpy
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   overviewpy.overviewpy.overview_tab
+   overviewpy.overviewpy.overview_na
+
+
+
+.. py:function:: overview_tab(df: pandas.DataFrame, id: str, time: str) -> pandas.DataFrame
+
+   Generates a tabular overview of the sample (and returns a data frame).
+   The general sample plots a two-column table that provides information on an
+   id in the left column and a the time frame on the right column.
+
+   :param df: Input data frame
+   :type df: pd.DataFrame
+   :param id: Identifies the id column (for instance, country)
+   :type id: str
+   :param time: Identifies the time column (for instance, years)
+   :type time: str
+
+   :returns: Returns a reduced data frame that shows a cohesive
+             overview of the data frame
+   :rtype: pd.DataFrame
+
+
+.. py:function:: overview_na(df: pandas.DataFrame) -> matplotlib.figure.Figure
+
+   Plots an overview of missing values by variable.
+
+   :param df: Input data frame
+   :type df: pd.DataFrame
+
+   :returns: Bar plot visualizing the number of missing values per variable
+   :rtype: matplotlib.figure.Figure
+
+
