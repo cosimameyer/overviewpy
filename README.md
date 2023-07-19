@@ -17,7 +17,7 @@ the following functions:
 -   `overview_tab` generates a tabular overview of the sample (and returns a data frame). The general sample plots a two-column table that provides information on an id in the left column and a the time frame on the right column.
 -   `overview_na` plots an overview of missing values by variable (both by row and by column)
 
-`overviewpy` seeks to mirrow the functionality of `overviewR` and will extend its features with the following functionality in the future:
+`overviewpy` seeks to mirror the functionality of `overviewR` and will extend its features with the following functionality in the future:
 
 -   `overview_crosstab` generates a cross table. The conditional column allows to disaggregate the overview table by specifying two conditions, hence resulting a 2x2 table. This way, it is easy to visualize the time and scope conditions as well as theoretical assumptions with examples from the data set.
 -   `overview_latex` converts the output of both `overview_tab` and `overview_crosstab` into LaTeX code and/or directly into a .tex file.
