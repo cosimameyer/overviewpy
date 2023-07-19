@@ -1,13 +1,13 @@
 # overviewpy
 
 Easily Extracting Information About Your Data
-<!--
+
 ## Installation
 
 ```bash
 $ pip install overviewpy
 ```
--->
+
 ## Usage
 
 The goal of `overviewpy` is to make it easy to get an overview of a data
