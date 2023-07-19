@@ -320,36 +320,26 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="overviewpy">
-<h1>overviewpy<a class="headerlink" href="#overviewpy" title="Permalink to this heading">#</a></h1>
+  <section id="overviewpy-img-src-https-raw-githubusercontent-com-cosimameyer-overviewpy-main-docs-img-overviewpy-png-align-right-height-139">
+<h1>overviewpy <img src='https://raw.githubusercontent.com/cosimameyer/overviewpy/main/docs/img/overviewpy.png' align="right" height="139" /><a class="headerlink" href="#overviewpy-img-src-https-raw-githubusercontent-com-cosimameyer-overviewpy-main-docs-img-overviewpy-png-align-right-height-139" title="Permalink to this heading">#</a></h1>
 <p>Easily Extracting Information About Your Data</p>
-<!--
-## Installation
-
-```bash
-$ pip install overviewpy
-```
--->
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>overviewpy
+</pre></div>
+</div>
+</section>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h2>
-<p>The goal of <code class="docutils literal notranslate"><span class="pre">overviewpy</span></code> is to make it easy to get an overview of a data
-set by displaying relevant sample information. At the moment, there are
-the following functions:</p>
+<section id="current-functions">
+<h3>Current Functions<a class="headerlink" href="#current-functions" title="Permalink to this heading">#</a></h3>
+<p>The goal of <code class="docutils literal notranslate"><span class="pre">overviewpy</span></code> is to make it easy to get an overview of a data set by displaying relevant sample information. At the moment, there are the following functions:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">overview_tab</span></code> generates a tabular overview of the sample (and returns a data frame). The general sample plots a two-column table that provides information on an id in the left column and a the time frame on the right column.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">overview_na</span></code> plots an overview of missing values by variable (both by row and by column)</p></li>
 </ul>
-<p><code class="docutils literal notranslate"><span class="pre">overviewpy</span></code> seeks to mirror the functionality of <code class="docutils literal notranslate"><span class="pre">overviewR</span></code> and will extend its features with the following functionality in the future:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">overview_crosstab</span></code> generates a cross table. The conditional column allows to disaggregate the overview table by specifying two conditions, hence resulting a 2x2 table. This way, it is easy to visualize the time and scope conditions as well as theoretical assumptions with examples from the data set.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">overview_latex</span></code> converts the output of both <code class="docutils literal notranslate"><span class="pre">overview_tab</span></code> and <code class="docutils literal notranslate"><span class="pre">overview_crosstab</span></code> into LaTeX code and/or directly into a .tex file.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">overview_plot</span></code> is an alternative to visualize the sample (a way to present results from <code class="docutils literal notranslate"><span class="pre">overview_tab</span></code>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">overview_crossplot</span></code> is an alternative to visualize a cross table (a way to present results from <code class="docutils literal notranslate"><span class="pre">overview_crosstab</span></code>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">overview_heat</span></code> plots a heat map of your time line</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">overview_overlap</span></code> plots comparison plots (bar graph and Venn diagram) to compare to data frames</p></li>
-</ul>
 <section id="overview-tab">
-<h3><code class="docutils literal notranslate"><span class="pre">overview_tab</span></code><a class="headerlink" href="#overview-tab" title="Permalink to this heading">#</a></h3>
+<h4><code class="docutils literal notranslate"><span class="pre">overview_tab</span></code><a class="headerlink" href="#overview-tab" title="Permalink to this heading">#</a></h4>
 <p>Generate some general overview of the data set using the time and scope
 conditions with <code class="docutils literal notranslate"><span class="pre">overview_tab</span></code>. The resulting data frame collapses the time condition for each id by
 taking into account potential gaps in the time frame.</p>
@@ -368,7 +358,7 @@ taking into account potential gaps in the time frame.</p>
 </div>
 </section>
 <section id="overview-na">
-<h3><code class="docutils literal notranslate"><span class="pre">overview_na</span></code><a class="headerlink" href="#overview-na" title="Permalink to this heading">#</a></h3>
+<h4><code class="docutils literal notranslate"><span class="pre">overview_na</span></code><a class="headerlink" href="#overview-na" title="Permalink to this heading">#</a></h4>
 <p><code class="docutils literal notranslate"><span class="pre">overview_na</span></code> is a simple function that provides information about the
 content of all variables in your data, not only the time and scope
 conditions. It returns a horizontal ggplot bar plot that indicates the
@@ -390,6 +380,19 @@ in percentage (the default) or the total number of NAs.</p>
 
 </pre></div>
 </div>
+</section>
+</section>
+<section id="roadmap">
+<h3>Roadmap<a class="headerlink" href="#roadmap" title="Permalink to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">overviewpy</span></code> seeks to mirror the functionality of <a class="reference external" href="https://github.com/cosimameyer/overviewR"><code class="docutils literal notranslate"><span class="pre">overviewR</span></code></a> and will extend its features with the following functionality in the future:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">overview_crosstab</span></code> generates a cross table. The conditional column allows to disaggregate the overview table by specifying two conditions, hence resulting a 2x2 table. This way, it is easy to visualize the time and scope conditions as well as theoretical assumptions with examples from the data set.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">overview_latex</span></code> converts the output of both <code class="docutils literal notranslate"><span class="pre">overview_tab</span></code> and <code class="docutils literal notranslate"><span class="pre">overview_crosstab</span></code> into LaTeX code and/or directly into a .tex file.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">overview_plot</span></code> is an alternative to visualize the sample (a way to present results from <code class="docutils literal notranslate"><span class="pre">overview_tab</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">overview_crossplot</span></code> is an alternative to visualize a cross table (a way to present results from <code class="docutils literal notranslate"><span class="pre">overview_crosstab</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">overview_heat</span></code> plots a heat map of your time line</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">overview_overlap</span></code> plots comparison plots (bar graph and Venn diagram) to compare to data frames</p></li>
+</ul>
 </section>
 </section>
 <section id="contributing">
@@ -446,9 +449,14 @@ in percentage (the default) or the total number of NAs.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-tab"><code class="docutils literal notranslate"><span class="pre">overview_tab</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-na"><code class="docutils literal notranslate"><span class="pre">overview_na</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#current-functions">Current Functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-tab"><code class="docutils literal notranslate"><span class="pre">overview_tab</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-na"><code class="docutils literal notranslate"><span class="pre">overview_na</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#roadmap">Roadmap</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributing">Contributing</a></li>
