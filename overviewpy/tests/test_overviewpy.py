@@ -1,5 +1,5 @@
 import pandas as pd
-from overviewpy.overviewpy import overviewpy
+from overviewpy.overviewpy import overview_tab
 
 data = {
     'id': ['RWA', 'RWA', 'RWA', 'GAB', 'GAB', 'FRA', 'FRA', 'BEL', 'BEL', 'ARG'],
@@ -15,6 +15,6 @@ expected = {
 
 df_expected = pd.DataFrame(expected)
 
-df_actual = overview_na(df, 'id', 'time')
+df_actual = overview_tab(df, 'id', 'time')
 
 assert df_actual.shape == df_expected.shape, "DataFrame does not match the expected shape"
