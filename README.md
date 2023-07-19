@@ -46,7 +46,7 @@ amount of missing data (NAs) for each variable (on the y-axis). You can
 choose whether to display the relative amount of NAs for each variable
 in percentage (the default) or the total number of NAs.
 
-```
+```python
 from overviewpy.overviewpy import overview_na
 import pandas as pd
 import numpy as np
