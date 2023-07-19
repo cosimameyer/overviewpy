@@ -1,4 +1,4 @@
-# overviewpy
+# overviewpy <img src='docs/fig/overviewpy.png' align="right" height="139" />
 
 Easily Extracting Information About Your Data
 
