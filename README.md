@@ -24,13 +24,13 @@ conditions with `overview_tab`. The resulting data frame collapses the time cond
 taking into account potential gaps in the time frame.
 
 ```python
- from overviewpy.overviewpy import overview_tab
- import pandas as pd
+from overviewpy.overviewpy import overview_tab
+import pandas as pd
 
- data = {
-        'id': ['RWA', 'RWA', 'RWA', 'GAB', 'GAB', 'FRA', 'FRA', 'BEL', 'BEL', 'ARG'],
-        'year': [2022, 2023, 2021, 2023, 2020, 2019, 2015, 2014, 2013, 2002]
-    }
+data = {
+       'id': ['RWA', 'RWA', 'RWA', 'GAB', 'GAB', 'FRA', 'FRA', 'BEL', 'BEL', 'ARG'],
+       'year': [2022, 2023, 2021, 2023, 2020, 2019, 2015, 2014, 2013, 2002]
+   }
 
 df = pd.DataFrame(data)
 
@@ -46,7 +46,7 @@ amount of missing data (NAs) for each variable (on the y-axis). You can
 choose whether to display the relative amount of NAs for each variable
 in percentage (the default) or the total number of NAs.
 
-```
+```python
 from overviewpy.overviewpy import overview_na
 import pandas as pd
 import numpy as np
