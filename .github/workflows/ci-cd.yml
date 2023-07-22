@@ -37,7 +37,7 @@ jobs:
     - name: Install packages for mkdocs 📦
       run: pip install \
             mkdocs-material \
-            mkdocstrings \
+            mkdocstrings-python \
             mkdocs-jupyter \
             markdown_include 
     - name: Deploy 🚀
