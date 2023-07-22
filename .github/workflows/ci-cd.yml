@@ -43,7 +43,7 @@ jobs:
             mkdocs-material \
             mkdocstrings-python \
             mkdocs-jupyter \
-            markdown_include \
+            markdown-include \
             overviewpy
     - name: Build 👷‍♀️
       run: mkdocs build --clean
