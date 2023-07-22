@@ -1,6 +1,6 @@
 # overviewpy <img src='https://raw.githubusercontent.com/cosimameyer/overviewpy/main/docs/img/overviewpy.png' align="right" width="200px" />
 
-The goal of overviewpy is to make it easy to get an overview of a data set by displaying relevant sample information. 
+overviewpy aims to make it easy to get an overview of a data set by displaying relevant sample information. 
 
 ## Installation
 
