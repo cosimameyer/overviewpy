@@ -10,7 +10,6 @@ theme:
   features:
     - search.highlight
   palette:
-    # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: teal
