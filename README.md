@@ -82,7 +82,7 @@ Interested in contributing? Check out the [contributing guidelines](/CONTRIBUTIN
 
 ## License
 
-`overviewpy` was created by Cosima Meyer. It is licensed under the terms of the BSD 3-Clause license.
+`overviewpy` is licensed under the terms of the BSD 3-Clause license.
 
 ## Credits
 
