@@ -39,6 +39,7 @@ jobs:
             mkdocs-material \
             mkdocstrings-python \
             mkdocs-jupyter \
-            markdown_include 
+            markdown_include \
+            overviewpy
     - name: Deploy 🚀
       run: mkdocs gh-deploy --force
