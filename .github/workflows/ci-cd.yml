@@ -4,8 +4,8 @@ on:
     branches:
       - main
 # Allow one concurrent deployment
-concurrency:
-  group: "pages"
+concurrency: 
+  group: ${{ github.workflow }}
   cancel-in-progress: true
 permissions:
   contents: write  
