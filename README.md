@@ -10,7 +10,7 @@ $ pip install overviewpy
 
 ## Usage
 
-### Current Functions
+### Implemented Functions
 The goal of `overviewpy` is to make it easy to get an overview of a data set by displaying relevant sample information. At the moment, there are the following functions:
 
 -   `overview_tab` generates a tabular overview of the sample (and returns a data frame). The general sample plots a two-column table that provides information on an id in the left column and a the time frame on the right column.
