@@ -31,47 +31,36 @@ jobs:
       uses: codecov/codecov-action@v2
       with:
         files: ./coverage.xml   # coverage report
-    - name: Generate mkdocs 📑
-      uses: actions/cache@v3
-      with:
-        key: mkdocs-material-${{ env.cache_id }}
-        path: .cache
-        restore-keys: |
-          mkdocs-material-
-    - name: Install packages for mkdocs 📦
-      run: pip install \
-            mkdocs-material \
-            mkdocstrings-python \
-            mkdocs-jupyter \
-            markdown-include \
-            overviewpy
-      - name: Upgrade pip
-        run: |
-          # install pip=>20.1 to use "pip cache dir"
-          python3 -m pip install --upgrade pip
-      - name: Get pip cache dir
-        id: pip-cache
-        run: echo "::set-output name=dir::$(pip cache dir)"
+  build:
+    name: Deploy docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v2
 
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.pip-cache.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-      - name: Install dependencies
-        run: python3 -m pip install -r ./requirements.txt
-
-      - run: mkdocs build
-        env: 
-          ENABLE_PDF_EXPORT: 1
-
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.ACCESS_TOKEN }}
-          publish_dir: ./site
+      - name: Deploy docs 🚀
+        uses: mhausenblas/mkdocs-deploy-gh-pages@master
+        # Or use mhausenblas/mkdocs-deploy-gh-pages@nomaterial to build without the mkdocs-material theme
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          CONFIG_FILE: mkdocs.yml
+          EXTRA_PACKAGES: build-base
+          # GITHUB_DOMAIN: github.myenterprise.com
+          REQUIREMENTS: docs/requirements.txt
+#    - name: Generate mkdocs 📑
+#      uses: actions/cache@v3
+#      with:
+#        key: mkdocs-material-${{ env.cache_id }}
+#        path: .cache
+#        restore-keys: |
+#          mkdocs-material-
+#    - name: Install packages for mkdocs 📦
+#      run: pip install \
+#            mkdocs-material \
+#            mkdocstrings-python \
+#            mkdocs-jupyter \
+#            markdown-include \
+#            overviewpy
 #    - name: Build 👷‍♀️
 #      run: mkdocs build --clean
 #    - name: Deploy 🚀
