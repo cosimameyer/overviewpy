@@ -9,35 +9,37 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     steps:
-    - name: Set up Python 3.9
+    - name: Set up Python 3.9 🐍
       uses: actions/setup-python@v2
       with:
         python-version: 3.9
-    - name: Write GH env 
+    - name: Write GH env 🗝️
       run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
-    - name: Check-out repository
+    - name: Check-out repository 🐈
       uses: actions/checkout@v2
-    - name: Install poetry
+    - name: Install poetry 💞
       uses: snok/install-poetry@v1
-    - name: Install package
+    - name: Install package 📦
       run: poetry install
-    - name: Test with pytest
+    - name: Test with pytest 🩺
       run: poetry run pytest tests/ --cov=overviewpy --cov-report=xml
-    - name: Use Codecov to track coverage
+    - name: Use Codecov to track coverage ✅
       uses: codecov/codecov-action@v2
       with:
         files: ./coverage.xml   # coverage report
-    - name: Generate mkdocs 
+    - name: Generate mkdocs 📑
       uses: actions/cache@v3
       with:
         key: mkdocs-material-${{ env.cache_id }}
         path: .cache
         restore-keys: |
           mkdocs-material-
+    - name: Install packages for mkdocs 📦
       run: pip install \
             mkdocs-material \
             mkdocstrings \
             mkdocs-jupyter \
             md_in_html \
             markdown_include 
+    - name: Deploy 🚀
       run: mkdocs gh-deploy --force
