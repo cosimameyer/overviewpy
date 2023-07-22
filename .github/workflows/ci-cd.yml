@@ -36,3 +36,23 @@ jobs:
 
 #    - name: Build documentation
 #      run: poetry run make html --directory docs/
+    - name: Checkout for mkdocs
+      uses: actions/checkout@v3
+      uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
+    - name: Generate mkdocs 
+      uses: actions/cache@v3
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material-
+      run: pip install \
+            mkdocs-material \
+            mkdocstrings \
+            mkdocs-jupyter \
+            md_in_html \
+            markdown_include 
+      run: mkdocs gh-deploy --force
