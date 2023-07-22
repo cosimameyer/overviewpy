@@ -45,7 +45,34 @@ jobs:
             mkdocs-jupyter \
             markdown-include \
             overviewpy
-    - name: Build 👷‍♀️
-      run: mkdocs build --clean
-    - name: Deploy 🚀
-      run: mkdocs gh-deploy --force --verbose
+      - name: Upgrade pip
+        run: |
+          # install pip=>20.1 to use "pip cache dir"
+          python3 -m pip install --upgrade pip
+      - name: Get pip cache dir
+        id: pip-cache
+        run: echo "::set-output name=dir::$(pip cache dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: Install dependencies
+        run: python3 -m pip install -r ./requirements.txt
+
+      - run: mkdocs build
+        env: 
+          ENABLE_PDF_EXPORT: 1
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.ACCESS_TOKEN }}
+          publish_dir: ./site
+#    - name: Build 👷‍♀️
+#      run: mkdocs build --clean
+#    - name: Deploy 🚀
+#      run: mkdocs gh-deploy --force --verbose
