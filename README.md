@@ -1,6 +1,6 @@
-# overviewpy <img src='https://raw.githubusercontent.com/cosimameyer/overviewpy/main/docs/img/overviewpy.png' align="right" height="139" />
+# overviewpy <img src='https://raw.githubusercontent.com/cosimameyer/overviewpy/main/docs/img/overviewpy.png' align="right" width="200px" />
 
-Easily Extracting Information About Your Data
+The goal of overviewpy is to make it easy to get an overview of a data set by displaying relevant sample information. 
 
 ## Installation
 
@@ -28,8 +28,10 @@ from overviewpy.overviewpy import overview_tab
 import pandas as pd
 
 data = {
-       'id': ['RWA', 'RWA', 'RWA', 'GAB', 'GAB', 'FRA', 'FRA', 'BEL', 'BEL', 'ARG'],
-       'year': [2022, 2023, 2021, 2023, 2020, 2019, 2015, 2014, 2013, 2002]
+       'id': ['RWA', 'RWA', 'RWA', 'GAB', 'GAB', 'FRA', \
+        'FRA', 'BEL', 'BEL', 'ARG'],
+       'year': [2022, 2023, 2021, 2023, 2020, 2019, 2015, \
+        2014, 2013, 2002]
    }
 
 df = pd.DataFrame(data)
@@ -52,8 +54,10 @@ import pandas as pd
 import numpy as np
 
 data_na = {
-        'id': ['RWA', 'RWA', 'RWA', np.nan, 'GAB', 'GAB', 'FRA', 'FRA', 'BEL', 'BEL', 'ARG', np.nan,  np.nan],
-        'year': [2022, 2001, 2000, 2023, 2021, 2023, 2020, 2019,  np.nan, 2015, 2014, 2013, 2002]
+        'id': ['RWA', 'RWA', 'RWA', np.nan, 'GAB', 'GAB',\
+            'FRA', 'FRA', 'BEL', 'BEL', 'ARG', np.nan,  np.nan],
+        'year': [2022, 2001, 2000, 2023, 2021, 2023, 2020, \
+            2019,  np.nan, 2015, 2014, 2013, 2002]
     }
 
 df_na = pd.DataFrame(data_na)

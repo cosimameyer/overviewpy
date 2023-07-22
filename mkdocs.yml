@@ -1,0 +1,75 @@
+site_name: overviewpy
+repo_url: https://github.com/cosimameyer/overviewpy
+repo_name: cosimameyer/overviewpy
+
+theme:
+  name: "material"
+  icon:
+    logo: material/desk-lamp-on
+    repo: material/github
+  features:
+    - search.highlight
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/lightbulb
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/lightbulb-outline
+        name: Switch to light mode
+
+extra:
+  consent:
+    title: Cookie consent
+    description: >- 
+      I took great care to disable all third party cookies and scripts. However, there might be some cookies left which would like to be used. 
+    actions:
+      - accept
+      - reject
+      - manage   
+    cookies:
+      github:
+        name: GitHub
+        checked: false
+      analytics:
+        name: Google Analytics
+        checked: false
+
+copyright: >
+  Copyright &copy; 2023 –
+  <a href="#__consent">Change cookie settings</a>
+
+plugins:
+  - mkdocstrings
+  - mkdocs-jupyter:
+      execute: true
+  - search:
+      lang: en
+
+markdown_extensions:
+  - md_in_html
+  - attr_list
+  - toc:
+      permalink: true
+  - markdown_include.include:
+      base_path: '.'
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+
+nav:
+  - index.md
+  - Getting started: example.ipynb
+  - reference.md
+  - News: changelog.md
+  - Contribute: contributing.md
+  - Code of conduct: conduct.md
