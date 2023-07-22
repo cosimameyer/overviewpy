@@ -21,7 +21,7 @@ jobs:
       uses: snok/install-poetry@v1
     - name: Install package 📦
       run: poetry install
-    - name: Test with pytest 🩺
+    - name: Test with pytest 👩‍⚕️
       run: poetry run pytest tests/ --cov=overviewpy --cov-report=xml
     - name: Use Codecov to track coverage ✅
       uses: codecov/codecov-action@v2
@@ -39,7 +39,6 @@ jobs:
             mkdocs-material \
             mkdocstrings \
             mkdocs-jupyter \
-            md_in_html \
             markdown_include 
     - name: Deploy 🚀
       run: mkdocs gh-deploy --force
