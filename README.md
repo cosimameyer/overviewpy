@@ -1,4 +1,5 @@
 # overviewpy <img src='https://raw.githubusercontent.com/cosimameyer/overviewpy/main/docs/img/overviewpy.png' align="right" width="200px" />
+![PyPI](https://img.shields.io/pypi/v/overviewpy) [![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
 
 overviewpy aims to make it easy to get an overview of a data set by displaying relevant sample information. 
 
