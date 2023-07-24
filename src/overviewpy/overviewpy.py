@@ -17,7 +17,7 @@ def overview_tab(df: pd.DataFrame, id: str, time: str) -> pd.DataFrame:
         overview of the data frame
     """
 
-    df2 = df.dropna(subset=['id']).copy()
+    df2 = df.dropna(subset=[id]).copy()
     if len(df2) != len(df):
         print("There is at least one missing value in your id variable. The missing value is automatically deleted.")
         
@@ -63,7 +63,7 @@ def overview_tab(df: pd.DataFrame, id: str, time: str) -> pd.DataFrame:
 
             df_no_dup.loc[group_df.index, 'time_frame'] = combined_str
             
-        return df_no_dup[['id', 'time_frame']].sort_values([id]).drop_duplicates()
+        return df_no_dup[[id, 'time_frame']].sort_values([id]).drop_duplicates()
 
     else:
         print("There are some duplicates. Make sure to aggregate first.")
