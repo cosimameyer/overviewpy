@@ -18,7 +18,7 @@ $ pip install overviewpy
 ### Implemented Functions
 The goal of `overviewpy` is to make it easy to get an overview of a data set by displaying relevant sample information. At the moment, there are the following functions:
 
-- **summarization** the `__main__.py` provides a command line interface to get an overview of the contents of a data
+- `overviewpy` provides a command line interface to get an overview of the contents of a data
     file as an HTML document.
 - `overview_tab` generates a tabular overview of the sample (and returns a data frame). The general sample plots a two-column table that provides information on an id in the left column and a the time frame on the right column.
 - `overview_na` plots an overview of missing values by variable (both by row and by column)
@@ -26,7 +26,7 @@ The goal of `overviewpy` is to make it easy to get an overview of a data set by 
 #### Summarization
 ##### Invocation
 ```
-usage: $ python overviewpy [-h] [-d DELIMITER] [-t {csv}] [-o {file,stdout}] datafile
+usage: $ python -m overviewpy [-h] [-d DELIMITER] [-t {csv}] [-o {file,stdout}] datafile
 
 positional arguments:
   datafile              The data file to read. Expects a path to a readable data file.
