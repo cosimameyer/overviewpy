@@ -1,6 +1,5 @@
 import jinja2
 import os
-import pathlib
 
 
 class JinjaRenderer:
@@ -8,9 +7,8 @@ class JinjaRenderer:
     @staticmethod
     def render(context: dict) -> str:
         """
+        Render the content of the context dictionary using the Jinja HTML template.
 
-        :param template_file:
-            A pathlib.Path object representing where to find the template file for Jinja to render.
         :param context:
             A dictionary of data elements to pass to the Jinja template to render.
         :return:
