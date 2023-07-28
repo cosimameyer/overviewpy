@@ -6,8 +6,8 @@ Provides a command line interface to access the summarizer library for data file
 import argparse
 import os
 import pathlib
-from datafilesummarizer.renderers.JinjaRenderer import JinjaRenderer
-from datafilesummarizer.Summarizer import Summarizer
+from overviewpy.datafilesummarizer.renderers.JinjaRenderer import JinjaRenderer
+from overviewpy.datafilesummarizer.Summarizer import Summarizer
 
 
 def _parse_args() -> argparse.Namespace:
