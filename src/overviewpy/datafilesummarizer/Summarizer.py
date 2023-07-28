@@ -22,7 +22,7 @@ class Summarizer:
             except pandas.errors.ParserError as err:
                 print(f'Unable to parse file {datafile.name}: {err}')
                 df = None
-            except UnicodeDecodeError as err:
+            except UnicodeDecodeError:
                 print('Unable to decode file as UTF-8. Retrying with ISO-8859-1.')
                 df = pandas.read_csv(datafile, delimiter=delimiter, encoding='ISO-8859-1')
         else:
@@ -42,7 +42,7 @@ class Summarizer:
     def get_column_names(self) -> list[str]:
         return list(self.df.columns)
 
-    def _get_details_for_column(self, column_name:str) -> dict:
+    def _get_details_for_column(self, column_name: str) -> dict:
         series = self.df[column_name]
 
         count_non_null = series.count()
