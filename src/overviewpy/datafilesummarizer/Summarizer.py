@@ -1,4 +1,4 @@
-import pandas
+import pandas as pd
 import pathlib
 
 
@@ -7,24 +7,24 @@ class Summarizer:
     """
 
     @staticmethod
-    def _read_datafile(datafile: pathlib.Path, filetype='csv', delimiter=',') -> pandas.DataFrame:
+    def _read_datafile(datafile: pathlib.Path, filetype='csv', delimiter=',') -> pd.DataFrame:
         """Read the input datafile into a Pandas DataFrame.
         TODO: Support additional filetypes: Excel, fixed-width.
 
         :param datafile: pathlib.Path
         :param filetype: str
         :param delimiter: str
-        :return: pandas.DataFrame
+        :return: pd.DataFrame
         """
         if filetype == 'csv':
             try:
-                df = pandas.read_csv(datafile, delimiter=delimiter)
-            except pandas.errors.ParserError as err:
+                df = pd.read_csv(datafile, delimiter=delimiter)
+            except pd.errors.ParserError as err:
                 print(f'Unable to parse file {datafile.name}: {err}')
                 df = None
             except UnicodeDecodeError:
                 print('Unable to decode file as UTF-8. Retrying with ISO-8859-1.')
-                df = pandas.read_csv(datafile, delimiter=delimiter, encoding='ISO-8859-1')
+                df = pd.read_csv(datafile, delimiter=delimiter, encoding='ISO-8859-1')
         else:
             raise ValueError(f"Unrecognized value for `type` argument: {type}")
 
