@@ -121,7 +121,7 @@ def overview_tab(df: pd.DataFrame, id: str, time: str) -> pd.DataFrame:
     return Overview(df, id, time).overview_tab()
 
 
-def overview_na(df: pd.DataFrame) -> matplotlib.axes.Axes:
+def overview_na(df: pd.DataFrame, show_plot: bool = True) -> matplotlib.axes.Axes:
     """
     Accessor method for the Overview.overview_na().
 
@@ -133,4 +133,4 @@ def overview_na(df: pd.DataFrame) -> matplotlib.axes.Axes:
     Returns:
         matplotlib.axes.Axes: Bar plot visualizing the number of missing values per variable
     """
-    return Overview(df, None, None).overview_na()
+    return Overview(df, None, None).overview_na(show_plot)

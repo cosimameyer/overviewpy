@@ -34,7 +34,7 @@ def test_overview_na():
     df_na = pd.DataFrame(data_na)
 
     # Grab the first container instance from the returned matplotlib.Axes object and run assertions on it.
-    fig = overview_na(df_na).containers[0]
+    fig = overview_na(df_na, show_plot=False).containers[0]
     assert isinstance(fig, matplotlib.container.BarContainer), \
            "Wrong plot type"
     assert len(fig.datavalues) == len(df_na.columns), \
