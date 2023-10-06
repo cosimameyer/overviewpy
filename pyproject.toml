@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "overviewpy"
-version = "0.1.0"
+version = "0.1.1"
 description = "Easily Extracting Information About Your Data"
 authors = ["Cosima Meyer"]
 license = "BSD 3-Clause"
@@ -24,6 +24,9 @@ myst-nb = {version = "^0.17.2", python = "^3.9"}
 sphinx-autoapi = "^2.1.1"
 sphinx-rtd-theme = "^1.2.2"
 pydata-sphinx-theme = "^0.13.3"
+
+[tool.poetry.group.dev.dependencies]
+python-semantic-release = "^8.1.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

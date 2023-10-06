@@ -6,20 +6,20 @@ from overviewpy.overviewpy import overview_tab, overview_na
 def test_overview_tab():
     """Tests shape of output of overview_tab"""
     data = {
-        'id': ['RWA', 'RWA', 'RWA', 'GAB', 'GAB', 'FRA', 'FRA', 'BEL', 'BEL', 'ARG'],
-        'time': [2022, 2023, 2021, 2023, 2020, 2019, 2015, 2014, 2013, 2002]
+        'id_column': ['RWA', 'RWA', 'RWA', 'GAB', 'GAB', 'FRA', 'FRA', 'BEL', 'BEL', 'BEL', 'ARG'],
+        'time': [2022, 2023, 2021, 2023, 2020, 2019, 2015, 2014, 2013, 2013, 2002]
     }
 
     df = pd.DataFrame(data)
 
     expected = {
-        'id': ['ARG', 'BEL', 'FRA', 'GAB', 'RWA'],
+        'id_column': ['ARG', 'BEL', 'FRA', 'GAB', 'RWA'],
         'time': ['2002', '2013-2014', '2015, 2019', '2020, 2023', '2021-2023']
     }
     
     df_expected = pd.DataFrame(expected)
 
-    df_actual = overview_tab(df, 'id', 'time')
+    df_actual = overview_tab(df, 'id_column', 'time')
 
     assert df_actual.shape == df_expected.shape, "DataFrame does not match the expected shape"
     
