@@ -25,7 +25,7 @@ The goal of `overviewpy` is to make it easy to get an overview of a data set by 
 #### `overview_tab`
 
 Generate some general overview of the data set using the time and scope
-conditions with `overview_tab`. The resulting data frame collapses the time condition for each id by
+conditions with `overview_tab`. The resulting data frame collapses the time condition for each `id` by
 taking into account potential gaps in the time frame.
 
 ```python
