@@ -1,4 +1,5 @@
-# overviewpy <img src='https://raw.githubusercontent.com/cosimameyer/overviewpy/main/docs/img/overviewpy.png' align="right" width="200px" />
+# overviewpy 
+<!--<img src='https://raw.githubusercontent.com/cosimameyer/overviewpy/main/docs/img/overviewpy.png' align="right" width="200px" />-->
 
 
 
