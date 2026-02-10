@@ -1,0 +1,22 @@
+:py:mod:`overviewpy`
+====================
+
+.. py:module:: overviewpy
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   overviewpy/index.rst
+
+
+Package Contents
+----------------
+
+.. py:data:: __version__
+
+   
+
