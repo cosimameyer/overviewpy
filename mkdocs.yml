@@ -71,5 +71,7 @@ nav:
   - Getting started: example.ipynb
   - reference.md
   - News: changelog.md
-  - Contribute: contributing.md
+  - Contribute:
+    - Contributing guidelines: contributing.md
+    - Development setup: setup.md
   - Code of conduct: conduct.md
