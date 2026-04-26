@@ -27,7 +27,7 @@ The goal of `overviewpy` is to make it easy to get an overview of a data set by 
 Use the `Summarizer` class to get a structured summary of a data file directly in Python:
 
 ```python
-from overviewpy.datafilesummarizer.Summarizer import Summarizer
+from overviewpy.datafilesummarizer import Summarizer
 import pathlib
 
 summarizer = Summarizer(pathlib.Path("mydata.csv"))
