@@ -43,11 +43,13 @@ If you are proposing a feature:
 Ready to contribute? Here's how to set up `overviewpy` for local development.
 
 1. Download a copy of `overviewpy` locally.
-2. Install `overviewpy` using `poetry`:
+2. Install `overviewpy` using `uv`:
 
     ```console
-    $ poetry install
+    $ uv sync --group dev
     ```
+
+    See the [Development setup](https://cosimameyer.github.io/overviewpy/setup/) guide for a full walkthrough including required tools and how to preview the docs locally.
 
 3. Use `git` (or similar) to create a branch for local development and make your changes:
 
@@ -55,7 +57,11 @@ Ready to contribute? Here's how to set up `overviewpy` for local development.
     $ git checkout -b name-of-your-bugfix-or-feature
     ```
 
-4. When you're done making changes, check that your changes conform to any code formatting requirements and pass any tests.
+4. When you're done making changes, check that your changes conform to any code formatting requirements and pass any tests:
+
+    ```console
+    $ uv run pytest tests/
+    ```
 
 5. Commit your changes and open a pull request.
 

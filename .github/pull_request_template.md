@@ -16,6 +16,6 @@
 
 ## Checklist
 
-- [ ] Tests pass locally (`poetry run pytest tests/`)
+- [ ] Tests pass locally (`uv run pytest tests/`)
 - [ ] New tests added for new functionality
 - [ ] Documentation updated if needed
