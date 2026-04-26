@@ -21,56 +21,6 @@ The goal of `overviewpy` is to make it easy to get an overview of a data set by 
 - `overview_na` plots an overview of missing values by variable (both by row and by column)
 - `overview_summary` returns a per-column summary of any data frame (non-null count, unique count, sample values)
 
-#### Summarization
-
-Use `overview_summary` to get a quick structured overview of any data frame:
-
-```python
-from overviewpy.overviewpy import overview_summary
-import pandas as pd
-
-df = pd.read_csv("mydata.csv")
-overview_summary(df)
-```
-
-This returns a data frame with one row per column containing `non_null_count`, `unique_count`, and `sample_values`.
-
-##### Command line
-
-Alternatively, run the summarizer from the command line to generate an HTML report:
-
-##### Invocation
-```
-usage: $ python -m overviewpy [-h] [-d DELIMITER] [-t {csv}] [-o {file,stdout}] datafile
-
-positional arguments:
-  datafile              The data file to read. Expects a path to a readable data file.
-
-options:
-  -h, --help            show this help message and exit
-  -d DELIMITER, --delimiter DELIMITER
-                        Define the character(s) which delimit the file. Defaults to ','.
-  -t {csv,excel,fwf}, --filetype {csv,excel,fwf}
-                        File type to parse the datafile with. Inferred from the file extension if omitted.
-  -o {file,stdout}, --output-type {file,stdout}
-                        Type of output desired. Defaults to creating an HTML file.
-```
-
-##### Output
-
-The default output is created as an HTML file in the same directory as the datafile passed in. The output file will be
-named with the stem of the datafile name and `-summary.html`. For example, if your datafile is named `magicdata.csv`,
-the output file would be `magicdata-summary.html`
-
-The output file will list, at the top, some summary information about the number of rows and columns in the file.
-
-Below that frontmatter is a table listing, for each included column in the file:
-
-1. The column name
-2. The number of non-null/empty values for that column
-3. The number of unique non-null values for that column
-4. A set of 5 example values found in that column.
-
 #### `overview_tab`
 
 Generate some general overview of the data set using the time and scope
@@ -119,6 +69,56 @@ df_na = pd.DataFrame(data_na)
 overview_na(df_na)
 
 ```
+
+#### `overview_summary`
+
+Use `overview_summary` to get a quick structured overview of any data frame:
+
+```python
+from overviewpy.overviewpy import overview_summary
+import pandas as pd
+
+df = pd.read_csv("mydata.csv")
+overview_summary(df)
+```
+
+This returns a data frame with one row per column containing `non_null_count`, `unique_count`, and `sample_values`.
+
+##### Command line
+
+Alternatively, run the summarizer from the command line to generate an HTML report:
+
+##### Invocation
+```
+usage: $ python -m overviewpy [-h] [-d DELIMITER] [-t {csv}] [-o {file,stdout}] datafile
+
+positional arguments:
+  datafile              The data file to read. Expects a path to a readable data file.
+
+options:
+  -h, --help            show this help message and exit
+  -d DELIMITER, --delimiter DELIMITER
+                        Define the character(s) which delimit the file. Defaults to ','.
+  -t {csv,excel,fwf}, --filetype {csv,excel,fwf}
+                        File type to parse the datafile with. Inferred from the file extension if omitted.
+  -o {file,stdout}, --output-type {file,stdout}
+                        Type of output desired. Defaults to creating an HTML file.
+```
+
+##### Output
+
+The default output is created as an HTML file in the same directory as the datafile passed in. The output file will be
+named with the stem of the datafile name and `-summary.html`. For example, if your datafile is named `magicdata.csv`,
+the output file would be `magicdata-summary.html`
+
+The output file will list, at the top, some summary information about the number of rows and columns in the file.
+
+Below that frontmatter is a table listing, for each included column in the file:
+
+1. The column name
+2. The number of non-null/empty values for that column
+3. The number of unique non-null values for that column
+4. A set of 5 example values found in that column.
 
 ### Roadmap
 `overviewpy` seeks to mirror the functionality of [`overviewR`](https://github.com/cosimameyer/overviewR) and will extend its features with the following functionality in the future:
