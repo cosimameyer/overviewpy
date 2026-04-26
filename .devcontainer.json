@@ -1,4 +1,6 @@
 {
-"name": "poetry",
-"image": "pypkgs/vscode", "extensions": ["ms-python.python"],
+"name": "overviewpy",
+"image": "pypkgs/vscode",
+"extensions": ["ms-python.python"],
+"postCreateCommand": "pip install uv && uv sync --group dev"
 }
