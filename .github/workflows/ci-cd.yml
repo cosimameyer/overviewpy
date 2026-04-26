@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 # Allow one concurrent deployment
 concurrency: 
   group: ${{ github.workflow }}
@@ -23,6 +26,8 @@ jobs:
       uses: actions/checkout@v2
     - name: Install poetry 💞
       uses: snok/install-poetry@v1
+      with:
+        version: "1.8.3"
     - name: Install package 📦
       run: poetry install
     - name: Test with pytest 👩‍⚕️

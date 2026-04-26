@@ -6,7 +6,7 @@ repo_name: cosimameyer/overviewpy
 theme:
   name: "material"
   icon:
-    logo: material/desk-lamp-on
+    logo: material/lightbulb-on
     repo: material/github
   features:
     - search.highlight
