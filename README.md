@@ -45,12 +45,10 @@ df_overview = overview_tab(df=df, id='id', time='year')
 
 #### `overview_na`
 
-`overview_na` is a simple function that provides information about the
-content of all variables in your data, not only the time and scope
-conditions. It returns a horizontal ggplot bar plot that indicates the
-amount of missing data (NAs) for each variable (on the y-axis). You can
-choose whether to display the relative amount of NAs for each variable
-in percentage (the default) or the total number of NAs.
+`overview_na` visualises missing values in your data. It returns a
+horizontal bar chart showing the share of NAs per variable (column-wise,
+the default) or per observation (row-wise). You can also augment the
+original data frame with the computed NA counts and percentages.
 
 ```python
 from overviewpy.overviewpy import overview_na
@@ -66,8 +64,20 @@ data_na = {
 
 df_na = pd.DataFrame(data_na)
 
+# Default: column-wise, percentage
 overview_na(df_na)
 
+# Absolute counts instead of percentage
+overview_na(df_na, perc=False)
+
+# Custom y-axis label
+overview_na(df_na, yaxis="My Variables")
+
+# Row-wise: one bar per observation
+overview_na(df_na, row_wise=True)
+
+# Row-wise and augment the data frame with na_count and percentage columns
+df_with_na = overview_na(df_na, row_wise=True, add=True)
 ```
 
 #### `overview_summary`
