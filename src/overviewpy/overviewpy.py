@@ -19,14 +19,17 @@ class Overview:
         if len(df2) != len(self.df):
             print("There is at least one missing value in your id variable. The missing value is automatically deleted.")
 
-        df_no_dup = df2.filter(items=[self.id, self.time]).drop_duplicates()
+        df3 = df2.dropna(subset=[self.time])
+        if len(df3) != len(df2):
+            print("There is at least one missing value in your time variable. The missing value is automatically deleted.")
 
-        if len(df_no_dup) != len(df2):
+        df_no_dup = df3.filter(items=[self.id, self.time]).drop_duplicates()
+
+        if len(df_no_dup) != len(df3):
             print("There are some duplicates. We aggregate the data before proceeding.")
 
         df_sorted = df_no_dup.sort_values([self.id, self.time])
         grouped = df_sorted.groupby(self.id)
-        self.df['time_frame'] = df_no_dup[self.time].astype(str)
 
         for _, group_df in grouped:
             numbers = group_df[self.time].tolist()

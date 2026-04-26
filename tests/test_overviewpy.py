@@ -24,6 +24,37 @@ def test_overview_tab():
     assert df_actual.shape == df_expected.shape, "DataFrame does not match the expected shape"
     
 
+def test_overview_tab_drops_na_in_time(capsys):
+    """overview_tab drops rows where the time variable is NA and warns the user."""
+    data = {
+        'id_column': ['RWA', 'RWA', 'GAB', 'GAB'],
+        'time': [2022, np.nan, 2020, 2021],
+    }
+    df = pd.DataFrame(data)
+
+    result = overview_tab(df, 'id_column', 'time')
+
+    assert 'RWA' in result['id_column'].values
+    assert result.shape == (2, 2)
+    captured = capsys.readouterr()
+    assert "time variable" in captured.out
+
+
+def test_overview_tab_drops_na_in_id(capsys):
+    """overview_tab drops rows where the id variable is NA and warns the user."""
+    data = {
+        'id_column': ['RWA', np.nan, 'GAB'],
+        'time': [2022, 2021, 2020],
+    }
+    df = pd.DataFrame(data)
+
+    result = overview_tab(df, 'id_column', 'time')
+
+    assert result.shape == (2, 2)
+    captured = capsys.readouterr()
+    assert "id variable" in captured.out
+
+
 def test_overview_na():
     """Test plotting of missing values."""
     data_na = {
