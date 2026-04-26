@@ -17,7 +17,7 @@ mkdocs-jupyter = "^0.24.2"
 markdown-include = "^0.8.1"
 
 [tool.poetry.dev-dependencies]
-pytest = "^7.4.0"
+pytest = "^8.1.0"
 pytest-cov = "^4.1.0"
 jupyter = "^1.0.0"
 myst-nb = {version = "^0.17.2", python = "^3.9"}
