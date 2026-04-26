@@ -23,9 +23,12 @@ docs = [
 ]
 
 [dependency-groups]
-dev = [
+test = [
     "pytest>=8.1.0",
     "pytest-cov>=4.1.0",
+]
+dev = [
+    {include-group = "test"},
     "jupyter>=1.0.0",
     "myst-nb>=0.17.2",
     "sphinx-autoapi>=2.1.1",

@@ -22,13 +22,11 @@ jobs:
       uses: astral-sh/setup-uv@v5
       with:
         python-version: "3.9"
-    - name: Write GH env 🗝️
-      run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
     - name: Install package 📦
-      run: uv sync --group dev
+      run: uv sync --group test
     - name: Test with pytest 👩‍⚕️
       run: uv run pytest tests/ --cov=overviewpy --cov-report=xml
     - name: Use Codecov to track coverage ✅
       uses: codecov/codecov-action@v4
       with:
-        files: ./coverage.xml   # coverage report
+        files: ./coverage.xml
