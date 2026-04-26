@@ -58,6 +58,23 @@ class Overview:
 
         return df_no_dup[[self.id, 'time_frame']].sort_values([self.id]).drop_duplicates()
 
+    def overview_summary(self) -> pd.DataFrame:
+        """Returns a per-column summary of the data frame.
+
+        Returns:
+            pd.DataFrame: One row per column with non_null_count, unique_count, and sample_values.
+        """
+        rows = []
+        for col in self.df.columns:
+            non_null = self.df[col].dropna()
+            rows.append({
+                'column': col,
+                'non_null_count': non_null.count(),
+                'unique_count': non_null.nunique(),
+                'sample_values': list(non_null.unique()[:5]),
+            })
+        return pd.DataFrame(rows).set_index('column')
+
     def overview_na(self, show_plot: bool = True) -> matplotlib.axes.Axes:
         """Plots an overview of missing values by variable.
 
@@ -86,3 +103,15 @@ def overview_tab(df: pd.DataFrame, id: str, time: int) -> pd.DataFrame:
 def overview_na(df: pd.DataFrame, show_plot: bool = True) -> matplotlib.axes.Axes:
     """Backward-compatible accessor for Overview.overview_na. Deprecated since 0.2.0."""
     return Overview(df, None, None).overview_na(show_plot)
+
+
+def overview_summary(df: pd.DataFrame) -> pd.DataFrame:
+    """Returns a per-column summary of the data frame.
+
+    Args:
+        df (pd.DataFrame): Input data frame.
+
+    Returns:
+        pd.DataFrame: One row per column with non_null_count, unique_count, and sample_values.
+    """
+    return Overview(df, None, None).overview_summary()

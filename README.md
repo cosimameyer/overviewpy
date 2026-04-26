@@ -17,24 +17,23 @@ $ pip install overviewpy
 ### Implemented Functions
 The goal of `overviewpy` is to make it easy to get an overview of a data set by displaying relevant sample information. At the moment, there are the following functions:
 
-- `overviewpy` provides a command line interface to get an overview of the contents of a data
-    file as an HTML document.
 - `overview_tab` generates a tabular overview of the sample (and returns a data frame). The general sample plots a two-column table that provides information on an id in the left column and a the time frame on the right column.
 - `overview_na` plots an overview of missing values by variable (both by row and by column)
+- `overview_summary` returns a per-column summary of any data frame (non-null count, unique count, sample values)
 
 #### Summarization
 
-Use the `Summarizer` class to get a structured summary of a data file directly in Python:
+Use `overview_summary` to get a quick structured overview of any data frame:
 
 ```python
-from overviewpy.datafilesummarizer import Summarizer
-import pathlib
+from overviewpy.overviewpy import overview_summary
+import pandas as pd
 
-summarizer = Summarizer(pathlib.Path("mydata.csv"))
-summary = summarizer.get_summary()
+df = pd.read_csv("mydata.csv")
+overview_summary(df)
 ```
 
-`get_summary()` returns a dict with `filename`, `rowCount`, `columnCount`, and `columnDetails` — a list of per-column stats including non-null counts, unique value counts, and up to 5 sample values.
+This returns a data frame with one row per column containing `non_null_count`, `unique_count`, and `sample_values`.
 
 ##### Command line
 
