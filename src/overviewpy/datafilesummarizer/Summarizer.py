@@ -8,14 +8,6 @@ class Summarizer:
 
     @staticmethod
     def _read_datafile(datafile: pathlib.Path, filetype='csv', delimiter=',') -> pd.DataFrame:
-        """Read the input datafile into a Pandas DataFrame.
-        TODO: Support additional filetypes: Excel, fixed-width.
-
-        :param datafile: pathlib.Path
-        :param filetype: str
-        :param delimiter: str
-        :return: pd.DataFrame
-        """
         if filetype == 'csv':
             try:
                 df = pd.read_csv(datafile, delimiter=delimiter)
@@ -25,8 +17,12 @@ class Summarizer:
             except UnicodeDecodeError:
                 print('Unable to decode file as UTF-8. Retrying with ISO-8859-1.')
                 df = pd.read_csv(datafile, delimiter=delimiter, encoding='ISO-8859-1')
+        elif filetype == 'excel':
+            df = pd.read_excel(datafile)
+        elif filetype == 'fwf':
+            df = pd.read_fwf(datafile)
         else:
-            raise ValueError(f"Unrecognized value for `type` argument: {type}")
+            raise ValueError(f"Unrecognized filetype: {filetype!r}")
 
         return df
 

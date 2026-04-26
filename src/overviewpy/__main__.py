@@ -28,7 +28,7 @@ def _parse_args() -> argparse.Namespace:
                         )
     parser.add_argument("-t", "--filetype",
                         help="The Pandas file type to parse the dataFile with. Defaults to 'csv'.",
-                        choices=['csv'],
+                        choices=['csv', 'excel', 'fwf'],
                         default='csv'
                         )
     parser.add_argument("-o", "--output-type",
