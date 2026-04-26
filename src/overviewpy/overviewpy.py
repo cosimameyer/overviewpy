@@ -1,3 +1,4 @@
+import warnings
 import matplotlib.pyplot as plt
 import matplotlib
 import pandas as pd
@@ -9,24 +10,32 @@ class Overview:
         self.id = id
         self.time = time
 
-    def overview_tab(self):
+    def overview_tab(self) -> pd.DataFrame:
         """Generates a tabular overview of the sample and returns a data frame.
 
         Returns:
             pd.DataFrame: Reduced data frame with id and time_frame columns.
         """
-        df2 = self.df.dropna(subset=[self.id]).copy()
-        if len(df2) != len(self.df):
-            print("There is at least one missing value in your id variable. The missing value is automatically deleted.")
+        df_no_id_na = self.df.dropna(subset=[self.id]).copy()
+        if len(df_no_id_na) != len(self.df):
+            warnings.warn(
+                "There is at least one missing value in your id variable. The missing value is automatically deleted.",
+                UserWarning,
+                stacklevel=2,
+            )
 
-        df3 = df2.dropna(subset=[self.time])
-        if len(df3) != len(df2):
-            print("There is at least one missing value in your time variable. The missing value is automatically deleted.")
+        df_clean = df_no_id_na.dropna(subset=[self.time]).copy()
+        if len(df_clean) != len(df_no_id_na):
+            warnings.warn(
+                "There is at least one missing value in your time variable. The missing value is automatically deleted.",
+                UserWarning,
+                stacklevel=2,
+            )
 
-        df_no_dup = df3.filter(items=[self.id, self.time]).drop_duplicates()
+        df_no_dup = df_clean.filter(items=[self.id, self.time]).drop_duplicates().copy()
 
-        if len(df_no_dup) != len(df3):
-            print("There are some duplicates. We aggregate the data before proceeding.")
+        if len(df_no_dup) != len(df_clean):
+            warnings.warn("There are some duplicates. We aggregate the data before proceeding.", UserWarning, stacklevel=2)
 
         df_sorted = df_no_dup.sort_values([self.id, self.time])
         grouped = df_sorted.groupby(self.id)
