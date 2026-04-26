@@ -23,6 +23,23 @@ The goal of `overviewpy` is to make it easy to get an overview of a data set by 
 - `overview_na` plots an overview of missing values by variable (both by row and by column)
 
 #### Summarization
+
+Use the `Summarizer` class to get a structured summary of a data file directly in Python:
+
+```python
+from overviewpy.datafilesummarizer.Summarizer import Summarizer
+import pathlib
+
+summarizer = Summarizer(pathlib.Path("mydata.csv"))
+summary = summarizer.get_summary()
+```
+
+`get_summary()` returns a dict with `filename`, `rowCount`, `columnCount`, and `columnDetails` — a list of per-column stats including non-null counts, unique value counts, and up to 5 sample values.
+
+##### Command line
+
+Alternatively, run the summarizer from the command line to generate an HTML report:
+
 ##### Invocation
 ```
 usage: $ python -m overviewpy [-h] [-d DELIMITER] [-t {csv}] [-o {file,stdout}] datafile
