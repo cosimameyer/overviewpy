@@ -52,7 +52,7 @@ options:
   -d DELIMITER, --delimiter DELIMITER
                         Define the character(s) which delimit the file. Defaults to ','.
   -t {csv,excel,fwf}, --filetype {csv,excel,fwf}
-                        The Pandas file type to parse the dataFile with. Defaults to 'csv'.
+                        File type to parse the datafile with. Inferred from the file extension if omitted.
   -o {file,stdout}, --output-type {file,stdout}
                         Type of output desired. Defaults to creating an HTML file.
 ```

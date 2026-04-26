@@ -29,7 +29,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("-t", "--filetype",
                         help="The Pandas file type to parse the dataFile with. Defaults to 'csv'.",
                         choices=['csv', 'excel', 'fwf'],
-                        default='csv'
+                        default=None
                         )
     parser.add_argument("-o", "--output-type",
                         help="Type of output desired. Defaults to HTML content returned as stdout.",

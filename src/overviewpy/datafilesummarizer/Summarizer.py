@@ -2,13 +2,30 @@ import pandas as pd
 import pathlib
 
 
+_EXTENSION_TO_FILETYPE = {
+    '.csv': 'csv',
+    '.tsv': 'csv',
+    '.xlsx': 'excel',
+    '.xls': 'excel',
+    '.xlsm': 'excel',
+    '.ods': 'excel',
+    '.fwf': 'fwf',
+}
+
+
 class Summarizer:
-    """
-    """
 
     @staticmethod
-    def _read_datafile(datafile: pathlib.Path, filetype='csv', delimiter=',') -> pd.DataFrame:
+    def _infer_filetype(datafile: pathlib.Path) -> str:
+        filetype = _EXTENSION_TO_FILETYPE.get(datafile.suffix.lower())
+        if filetype is None:
+            raise ValueError(f"Cannot infer filetype from extension {datafile.suffix!r}. Pass filetype explicitly.")
+        return filetype
+
+    @staticmethod
+    def _read_datafile(datafile: pathlib.Path, filetype: str, delimiter=',') -> pd.DataFrame:
         if filetype == 'csv':
+            delimiter = '\t' if datafile.suffix.lower() == '.tsv' else delimiter
             try:
                 df = pd.read_csv(datafile, delimiter=delimiter)
             except pd.errors.ParserError as err:
@@ -26,10 +43,11 @@ class Summarizer:
 
         return df
 
-    def __init__(self, datafile: pathlib.Path, filetype='csv', delimiter=','):
+    def __init__(self, datafile: pathlib.Path, filetype: str | None = None, delimiter=','):
         self.filename = datafile.name
         self.file_location = datafile.parent
-        self.df = Summarizer._read_datafile(datafile, filetype, delimiter)
+        resolved_filetype = filetype or Summarizer._infer_filetype(datafile)
+        self.df = Summarizer._read_datafile(datafile, resolved_filetype, delimiter)
         self.column_details = self._compile_column_details()
 
     def get_shape(self) -> tuple[int, int]:
