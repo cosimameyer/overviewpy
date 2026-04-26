@@ -13,8 +13,13 @@ class Overview:
     def overview_tab(self) -> pd.DataFrame:
         """Generates a tabular overview of the sample and returns a data frame.
 
+        Collapses the time variable per id into compact ranges (e.g. "2013-2015,
+        2019"). Rows where id or time is NA are dropped automatically and a
+        ``UserWarning`` is raised for each affected variable.
+
         Returns:
-            pd.DataFrame: Reduced data frame with id and time_frame columns.
+            pd.DataFrame: Two-column frame with id and time_frame columns, one
+            row per unique id.
         """
         df_no_id_na = self.df.dropna(subset=[self.id]).copy()
         if len(df_no_id_na) != len(self.df):
