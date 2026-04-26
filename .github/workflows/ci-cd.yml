@@ -25,8 +25,4 @@ jobs:
     - name: Install package 📦
       run: uv sync --group test
     - name: Test with pytest 👩‍⚕️
-      run: uv run pytest tests/ --cov=overviewpy --cov-report=xml
-    - name: Use Codecov to track coverage ✅
-      uses: codecov/codecov-action@v4
-      with:
-        files: ./coverage.xml
+      run: uv run pytest tests/
