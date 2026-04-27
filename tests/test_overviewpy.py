@@ -1,10 +1,9 @@
 import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 from overviewpy.overviewpy import overview_tab, overview_na, overview_summary, overview_plot
-
-matplotlib.use("Agg")
 
 
 def test_overview_tab():

@@ -1,6 +1,23 @@
-import matplotlib.pyplot as plt
 import matplotlib
+import matplotlib.pyplot as plt
+import matplotlib.ticker
 import pandas as pd
+
+
+def _consecutive_segments(numbers: list) -> list[list]:
+    """Split a sorted list of numbers into groups of consecutive values."""
+    if not numbers:
+        return []
+    segments = []
+    current = [numbers[0]]
+    for i in range(1, len(numbers)):
+        if numbers[i] == numbers[i - 1] + 1:
+            current.append(numbers[i])
+        else:
+            segments.append(current)
+            current = [numbers[i]]
+    segments.append(current)
+    return segments
 
 
 class Overview:
@@ -30,31 +47,10 @@ class Overview:
 
         for _, group_df in grouped:
             numbers = group_df[self.time].tolist()
-
-            if len(numbers) > 1:
-                consecutive_ranges = []
-                current_range = [numbers[0]]
-
-                for i in range(1, len(numbers)):
-                    if numbers[i] == numbers[i - 1] + 1:
-                        current_range.append(numbers[i])
-                    else:
-                        if len(current_range) > 1:
-                            consecutive_ranges.append(f'{current_range[0]}-{current_range[-1]}')
-                        else:
-                            consecutive_ranges.append(str(current_range[0]))
-                        current_range = [numbers[i]]
-
-                if len(current_range) > 1:
-                    consecutive_ranges.append(f'{current_range[0]}-{current_range[-1]}')
-                else:
-                    consecutive_ranges.append(str(current_range[0]))
-
-                combined_str = ', '.join(consecutive_ranges)
-            else:
-                combined_str = str(numbers[0])
-
-            df_no_dup.loc[group_df.index, 'time_frame'] = combined_str
+            parts = []
+            for seg in _consecutive_segments(numbers):
+                parts.append(f'{seg[0]}-{seg[-1]}' if len(seg) > 1 else str(seg[0]))
+            df_no_dup.loc[group_df.index, 'time_frame'] = ', '.join(parts)
 
         return df_no_dup[[self.id, 'time_frame']].sort_values([self.id]).drop_duplicates()
 
@@ -84,19 +80,20 @@ class Overview:
                 Defaults to False.
 
         Returns:
-            matplotlib.axes.Axes: Horizontal bar plot of missing value counts or percentages,
-                sorted in descending order.
+            matplotlib.axes.Axes: Horizontal bar plot sorted with the highest-missing variable
+                at the top.
         """
         na_counts = self.df.isna().sum()
 
         if relative:
-            values = (na_counts / len(self.df) * 100).sort_values(ascending=True)
+            values = (na_counts / len(self.df) * 100).sort_values(ascending=False)
             xlabel = "Percentage (%)"
         else:
-            values = na_counts.sort_values(ascending=True)
+            values = na_counts.sort_values(ascending=False)
             xlabel = "Count"
 
         ax = values.plot(kind="barh")
+        ax.invert_yaxis()
         ax.set_xlabel(xlabel)
         ax.set_ylabel("Columns")
         plt.title("Missing Values Overview")
@@ -146,7 +143,6 @@ class Overview:
         )
 
         ids_sorted = sorted(dat_red[self.id].unique(), key=str)
-        id_to_pos = {id_val: i for i, id_val in enumerate(ids_sorted)}
 
         if color is not None:
             color_vals = sorted(dat_red[color].dropna().unique(), key=str)
@@ -155,23 +151,11 @@ class Overview:
 
         fig, ax = plt.subplots()
 
-        for id_val in ids_sorted:
-            y_pos = id_to_pos[id_val]
+        for y_pos, id_val in enumerate(ids_sorted):
             id_data = dat_red[dat_red[self.id] == id_val].sort_values(self.time)
             times = id_data[self.time].tolist()
 
-            # Split into consecutive segments (gap > 1 breaks the line)
-            segments = []
-            current_seg = [times[0]]
-            for i in range(1, len(times)):
-                if times[i] == times[i - 1] + 1:
-                    current_seg.append(times[i])
-                else:
-                    segments.append(current_seg)
-                    current_seg = [times[i]]
-            segments.append(current_seg)
-
-            for seg in segments:
+            for seg in _consecutive_segments(times):
                 ax.plot(seg, [y_pos] * len(seg), color="black", linewidth=1.5, zorder=1)
                 if color is not None:
                     seg_data = id_data[id_data[self.time].isin(seg)]
@@ -199,7 +183,7 @@ class Overview:
         if asc:
             ax.invert_yaxis()
 
-        ax.xaxis.set_major_locator(plt.MaxNLocator(integer=True))
+        ax.xaxis.set_major_locator(matplotlib.ticker.MaxNLocator(integer=True))
         ax.set_xlabel(xaxis)
         ax.set_ylabel(yaxis)
         ax.set_facecolor("white")
@@ -241,7 +225,7 @@ def overview_tab(df: pd.DataFrame, id: str, time: int) -> pd.DataFrame:
 
 def overview_na(df: pd.DataFrame, show_plot: bool = True, relative: bool = False) -> matplotlib.axes.Axes:
     """Backward-compatible accessor for Overview.overview_na. Deprecated since 0.2.0."""
-    return Overview(df, None, None).overview_na(show_plot, relative)
+    return Overview(df, None, None).overview_na(show_plot=show_plot, relative=relative)
 
 
 def overview_summary(df: pd.DataFrame) -> pd.DataFrame:
