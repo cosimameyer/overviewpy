@@ -36,9 +36,13 @@ def test_overview_na():
 
     df_na = pd.DataFrame(data_na)
 
-    fig = overview_na(df_na, show_plot=False).containers[0]
+    ax = overview_na(df_na, show_plot=False)
+    fig = ax.containers[0]
     assert isinstance(fig, matplotlib.container.BarContainer), "Wrong plot type"
     assert len(fig.datavalues) == len(df_na.columns), "Incorrect number of bars plotted"
+    vals = fig.datavalues
+    assert all(vals[i] >= vals[i + 1] for i in range(len(vals) - 1)), \
+        "Bars should be sorted in descending order (most missing at top)"
     plt.close("all")
 
 
