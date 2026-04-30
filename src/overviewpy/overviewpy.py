@@ -91,6 +91,42 @@ class Overview:
             })
         return pd.DataFrame(rows).set_index('column')
 
+    def overview_markdown(
+        self,
+        title: str = "Time and scope of the sample",
+        id: str = "Sample",
+        time: str = "Time frame",
+        file_path: str | None = None,
+    ) -> str:
+        """Generates a Markdown table from overview_tab output.
+
+        Args:
+            title: Heading displayed above the table.
+            id: Header for the id column (default: "Sample").
+            time: Header for the time frame column (default: "Time frame").
+            file_path: If provided, writes the output to this path as a .md file.
+
+        Returns:
+            str: Markdown-formatted string with a heading and table.
+        """
+        tab = self.overview_tab()
+        lines = [
+            f"## {title}",
+            "",
+            f"| {id} | {time} |",
+            "|---|---|",
+        ]
+        for _, row in tab.iterrows():
+            lines.append(f"| {row.iloc[0]} | {row.iloc[1]} |")
+
+        output = "\n".join(lines)
+
+        if file_path is not None:
+            with open(file_path, "w") as f:
+                f.write(output)
+
+        return output
+
     def overview_crossplot(
         self,
         cond1: str,
@@ -566,6 +602,24 @@ def overview_heat(
         col_high=col_high,
         label=label,
         show_plot=show_plot,
+    )
+
+
+def overview_markdown(
+    df: pd.DataFrame,
+    id: str,
+    time: str,
+    title: str = "Time and scope of the sample",
+    id_label: str = "Sample",
+    time_label: str = "Time frame",
+    file_path: str | None = None,
+) -> str:
+    """Backward-compatible accessor for Overview.overview_markdown. Deprecated since 0.2.0."""
+    return Overview(df, id, time).overview_markdown(
+        title=title,
+        id=id_label,
+        time=time_label,
+        file_path=file_path,
     )
 
 
