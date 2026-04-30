@@ -5,8 +5,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-from overviewpy.overviewpy import overview_tab, overview_na, overview_summary, overview_plot, overview_overlap, overview_heat
-
+from overviewpy.overviewpy import overview_tab, overview_na, overview_summary, overview_plot, overview_overlap, overview_heat, overview_crossplot
 
 def test_overview_tab():
     """Tests output values and shape of overview_tab."""
@@ -176,6 +175,87 @@ def test_overview_heat_perc_requires_exp_total():
         overview_heat(df, 'id', 'year', perc=True, show_plot=False)
 
 
+def test_overview_crossplot():
+    """Test that overview_crossplot returns an Axes with a scatter and two threshold lines."""
+    data = {
+        'id': ['A', 'A', 'B', 'B', 'C'],
+        'year': [2000, 2001, 2000, 2001, 2000],
+        'gdp': [10000, 30000, 20000, 50000, 5000],
+        'population': [100, 200, 300, 250, 150],
+    }
+    df = pd.DataFrame(data)
+    ax = overview_crossplot(df, 'id', 'year', 'gdp', 'population', 25000, 200, show_plot=False)
+
+    assert isinstance(ax, matplotlib.axes.Axes)
+    assert len(ax.collections) == 1, "Expected one scatter collection"
+    assert len(ax.lines) == 2, "Expected two threshold lines (vline + hline)"
+    assert ax.get_xlabel() == "Condition 1"
+    assert ax.get_ylabel() == "Condition 2"
+
+
+def test_overview_crossplot_custom_axis_labels():
+    """Test that custom axis labels are applied."""
+    data = {
+        'id': ['A', 'B'],
+        'year': [2000, 2000],
+        'gdp': [10000, 50000],
+        'pop': [100, 300],
+    }
+    df = pd.DataFrame(data)
+    ax = overview_crossplot(df, 'id', 'year', 'gdp', 'pop', 25000, 200,
+                            xaxis="GDP", yaxis="Population", show_plot=False)
+
+    assert ax.get_xlabel() == "GDP"
+    assert ax.get_ylabel() == "Population"
+
+
+def test_overview_crossplot_with_label():
+    """Test that label=True annotates points."""
+    data = {
+        'id': ['A', 'B'],
+        'year': [2000, 2000],
+        'gdp': [10000, 50000],
+        'pop': [100, 300],
+    }
+    df = pd.DataFrame(data)
+    ax = overview_crossplot(df, 'id', 'year', 'gdp', 'pop', 25000, 200,
+                            label=True, show_plot=False)
+
+    assert len(ax.texts) == 2, "Expected one annotation per point"
+
+
+def test_overview_crossplot_aggregates_duplicates():
+    """Test that duplicate (id, time) rows are aggregated by mean."""
+    data = {
+        'id': ['A', 'A'],
+        'year': [2000, 2000],
+        'gdp': [10000, 30000],
+        'pop': [100, 200],
+    }
+    df = pd.DataFrame(data)
+    ax = overview_crossplot(df, 'id', 'year', 'gdp', 'pop', 25000, 200, show_plot=False)
+
+    offsets = ax.collections[0].get_offsets()
+    assert len(offsets) == 1, "Duplicates should be aggregated into one point"
+    assert offsets[0][0] == pytest.approx(20000.0)
+    assert offsets[0][1] == pytest.approx(150.0)
+
+
+def test_overview_crossplot_drops_na_id():
+    """Test that NaN id values are dropped."""
+    data = {
+        'id': ['A', np.nan],
+        'year': [2000, 2000],
+        'gdp': [10000, 50000],
+        'pop': [100, 300],
+    }
+    df = pd.DataFrame(data)
+    ax = overview_crossplot(df, 'id', 'year', 'gdp', 'pop', 25000, 200, show_plot=False)
+
+    offsets = ax.collections[0].get_offsets()
+    assert len(offsets) == 1, "NaN id rows should be dropped"
+
+
 def test_overview_summary():
     """Tests structure and content of overview_summary output."""
     data = {
@@ -322,3 +402,89 @@ def test_overview_overlap_invalid_plot_type():
 
     with pytest.raises(ValueError, match="plot_type must be"):
         overview_overlap(dat1, dat2, dat1_id="id", dat2_id="id", plot_type="pie")
+
+
+def test_overview_crossplot():
+    """Test that overview_crossplot returns an Axes with a scatter and two threshold lines."""
+    data = {
+        'id': ['A', 'A', 'B', 'B', 'C'],
+        'year': [2000, 2001, 2000, 2001, 2000],
+        'gdp': [10000, 30000, 20000, 50000, 5000],
+        'population': [100, 200, 300, 250, 150],
+    }
+    df = pd.DataFrame(data)
+    ax = overview_crossplot(df, 'id', 'year', 'gdp', 'population', 25000, 200, show_plot=False)
+
+    assert isinstance(ax, matplotlib.axes.Axes)
+    assert len(ax.collections) == 1, "Expected one scatter collection"
+    assert len(ax.lines) == 2, "Expected two threshold lines (vline + hline)"
+    assert ax.get_xlabel() == "Condition 1"
+    assert ax.get_ylabel() == "Condition 2"
+    plt.close('all')
+
+
+def test_overview_crossplot_custom_axis_labels():
+    """Test that custom axis labels are applied."""
+    data = {
+        'id': ['A', 'B'],
+        'year': [2000, 2000],
+        'gdp': [10000, 50000],
+        'pop': [100, 300],
+    }
+    df = pd.DataFrame(data)
+    ax = overview_crossplot(df, 'id', 'year', 'gdp', 'pop', 25000, 200,
+                            xaxis="GDP", yaxis="Population", show_plot=False)
+
+    assert ax.get_xlabel() == "GDP"
+    assert ax.get_ylabel() == "Population"
+    plt.close('all')
+
+
+def test_overview_crossplot_with_label():
+    """Test that label=True annotates points."""
+    data = {
+        'id': ['A', 'B'],
+        'year': [2000, 2000],
+        'gdp': [10000, 50000],
+        'pop': [100, 300],
+    }
+    df = pd.DataFrame(data)
+    ax = overview_crossplot(df, 'id', 'year', 'gdp', 'pop', 25000, 200,
+                            label=True, show_plot=False)
+
+    assert len(ax.texts) == 2, "Expected one annotation per point"
+    plt.close('all')
+
+
+def test_overview_crossplot_aggregates_duplicates():
+    """Test that duplicate (id, time) rows are aggregated by mean."""
+    data = {
+        'id': ['A', 'A'],
+        'year': [2000, 2000],
+        'gdp': [10000, 30000],
+        'pop': [100, 200],
+    }
+    df = pd.DataFrame(data)
+    ax = overview_crossplot(df, 'id', 'year', 'gdp', 'pop', 25000, 200, show_plot=False)
+
+    offsets = ax.collections[0].get_offsets()
+    assert len(offsets) == 1, "Duplicates should be aggregated into one point"
+    assert offsets[0][0] == pytest.approx(20000.0)
+    assert offsets[0][1] == pytest.approx(150.0)
+    plt.close('all')
+
+
+def test_overview_crossplot_drops_na_id():
+    """Test that NaN id values are dropped."""
+    data = {
+        'id': ['A', np.nan],
+        'year': [2000, 2000],
+        'gdp': [10000, 50000],
+        'pop': [100, 300],
+    }
+    df = pd.DataFrame(data)
+    ax = overview_crossplot(df, 'id', 'year', 'gdp', 'pop', 25000, 200, show_plot=False)
+
+    offsets = ax.collections[0].get_offsets()
+    assert len(offsets) == 1, "NaN id rows should be dropped"
+    plt.close('all')

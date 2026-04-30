@@ -90,6 +90,75 @@ class Overview:
             })
         return pd.DataFrame(rows).set_index('column')
 
+    def overview_crossplot(
+        self,
+        cond1: str,
+        cond2: str,
+        threshold1: float,
+        threshold2: float,
+        xaxis: str = "Condition 1",
+        yaxis: str = "Condition 2",
+        label: bool = False,
+        color: bool = False,
+        dot_size: float = 20,
+        fontsize: float = 8,
+        show_plot: bool = True,
+    ) -> matplotlib.axes.Axes:
+        """Plots a scatter of two conditions split by their thresholds.
+
+        Observations are aggregated to (id, time) means before plotting.
+        Vertical and horizontal lines mark the thresholds, dividing the
+        plot into four quadrants.
+
+        Args:
+            cond1: Column name of the first condition (x-axis).
+            cond2: Column name of the second condition (y-axis).
+            threshold1: Threshold for cond1, drawn as a vertical line.
+            threshold2: Threshold for cond2, drawn as a horizontal line.
+            xaxis: X-axis label. Defaults to "Condition 1".
+            yaxis: Y-axis label. Defaults to "Condition 2".
+            label: Whether to annotate each point with its id-time label. Defaults to False.
+            color: Whether to color points by quadrant. Defaults to False.
+            dot_size: Marker size passed to scatter. Defaults to 20.
+            fontsize: Font size for labels when label is True. Defaults to 8.
+            show_plot: Whether to display the plot. Defaults to True.
+
+        Returns:
+            matplotlib.axes.Axes: Scatter plot with threshold lines.
+        """
+        agg = (
+            self.df.dropna(subset=[self.id])
+            .groupby([self.id, self.time])[[cond1, cond2]]
+            .mean()
+            .reset_index()
+        )
+        agg["_grp"] = (
+            (agg[cond1] >= threshold1).astype(int) * 2
+            + (agg[cond2] >= threshold2).astype(int)
+        )
+
+        _, ax = plt.subplots()
+
+        scatter_kw: dict = {"alpha": 0.5, "s": dot_size}
+        if color:
+            scatter_kw["c"] = [f"C{g}" for g in agg["_grp"]]
+        ax.scatter(agg[cond1], agg[cond2], **scatter_kw)
+
+        ax.axvline(x=threshold1, color="black")
+        ax.axhline(y=threshold2, color="black")
+        ax.set_xlabel(xaxis)
+        ax.set_ylabel(yaxis)
+
+        if label:
+            labels = agg[self.id].astype(str) + agg[self.time].astype(str)
+            for (x, y, txt) in zip(agg[cond1], agg[cond2], labels):
+                ax.annotate(txt, (x, y), fontsize=fontsize)
+
+        if show_plot:
+            plt.show()
+
+        return ax
+
     def overview_heat(
         self,
         perc: bool = False,
@@ -383,6 +452,29 @@ class Overview:
             plot_type=plot_type,
             show_plot=show_plot,
         )
+
+
+def overview_crossplot(
+    df: pd.DataFrame,
+    id: str,
+    time: str,
+    cond1: str,
+    cond2: str,
+    threshold1: float,
+    threshold2: float,
+    xaxis: str = "Condition 1",
+    yaxis: str = "Condition 2",
+    label: bool = False,
+    color: bool = False,
+    dot_size: float = 20,
+    fontsize: float = 8,
+    show_plot: bool = True,
+) -> matplotlib.axes.Axes:
+    """Backward-compatible accessor for Overview.overview_crossplot. Deprecated since 0.2.0."""
+    return Overview(df, id, time).overview_crossplot(
+        cond1, cond2, threshold1, threshold2,
+        xaxis, yaxis, label, color, dot_size, fontsize, show_plot,
+    )
 
 
 def overview_tab(df: pd.DataFrame, id: str, time: int) -> pd.DataFrame:
