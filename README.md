@@ -22,6 +22,7 @@ The goal of `overviewpy` is to make it easy to get an overview of a data set by 
 - `overview_summary` returns a per-column summary of any data frame (non-null count, unique count, sample values)
 - `overview_plot` visualizes observation presence across id and time as a connected dot-plot
 - `overview_overlap` plots comparison plots (bar chart or Venn diagram) to compare the ID coverage of two data frames
+- `overview_heat` plots a heat map of observation counts (or percentages) for each id-time combination
 
 #### `overview_tab`
 
@@ -194,6 +195,51 @@ overview.overview_overlap(dat2=df2, dat2_id='id', dat1_name='Survey 1', dat2_nam
 
 ![overview_overlap Venn diagram](docs/img/overview_overlap_venn.png)
 
+#### `overview_heat`
+
+`overview_heat` plots a heat map that shows how many observations exist for each id-time combination. Set `perc=True` together with `exp_total` to display coverage as a percentage of the expected maximum.
+
+```python
+from overviewpy.overviewpy import overview_heat
+import pandas as pd
+
+data = {
+       'id': ['RWA', 'RWA', 'RWA', 'GAB', 'GAB', 'FRA', \
+        'FRA', 'BEL', 'BEL', 'ARG'],
+       'year': [2022, 2023, 2021, 2023, 2020, 2019, 2015, \
+        2014, 2013, 2002]
+   }
+
+df = pd.DataFrame(data)
+
+# Absolute counts
+overview_heat(df=df, id='id', time='year')
+
+# Percentage of expected total
+overview_heat(df=df, id='id', time='year', perc=True, exp_total=3)
+```
+
+#### `overview_heat`
+
+`overview_heat` plots a heat map that shows how many observations exist for each id-time combination. Set `perc=True` together with `exp_total` to display coverage as a percentage of the expected maximum.
+
+```python
+from overviewpy.overviewpy import Overview
+import pandas as pd
+
+overview = Overview(df=df, id='id', time='year')
+overview.overview_heat()
+```
+
+![overview_heat absolute](docs/img/overview_heat.png)
+
+```python
+# Percentage view
+overview.overview_heat(perc=True, exp_total=3)
+```
+
+![overview_heat percentage](docs/img/overview_heat_perc.png)
+
 ##### Command line
 
 Alternatively, run the summarizer from the command line to generate an HTML report:
@@ -236,7 +282,6 @@ Below that frontmatter is a table listing, for each included column in the file:
 -   `overview_crosstab` generates a cross table. The conditional column allows to disaggregate the overview table by specifying two conditions, hence resulting a 2x2 table. This way, it is easy to visualize the time and scope conditions as well as theoretical assumptions with examples from the data set.
 -   `overview_latex` converts the output of both `overview_tab` and `overview_crosstab` into LaTeX code and/or directly into a .tex file.
 -   `overview_crossplot` is an alternative to visualize a cross table (a way to present results from `overview_crosstab`)
--   `overview_heat` plots a heat map of your time line
 
 ## Contributing
 
