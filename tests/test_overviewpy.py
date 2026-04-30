@@ -5,8 +5,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-from overviewpy.overviewpy import overview_tab, overview_na, overview_summary, overview_plot, overview_overlap
-
+from overviewpy.overviewpy import overview_tab, overview_na, overview_summary, overview_plot, overview_overlap, overview_heat
 
 
 def test_overview_tab():
@@ -122,6 +121,59 @@ def test_overview_na_add():
     # row 3 (index 3): id=NaN, year=2023 → 1 NA out of 2 columns → 50 %
     assert result["na_count"].iloc[3] == 1
     assert result["percentage"].iloc[3] == 50.0
+
+
+def test_overview_heat_returns_axes():
+    """Test that overview_heat returns a matplotlib Axes object."""
+    data = {
+        'id': ['RWA', 'RWA', 'GAB', 'GAB', 'FRA'],
+        'year': [2020, 2021, 2020, 2021, 2020],
+    }
+    df = pd.DataFrame(data)
+    ax = overview_heat(df, 'id', 'year', show_plot=False)
+    assert isinstance(ax, matplotlib.axes.Axes)
+    plt.close('all')
+
+
+def test_overview_heat_absolute_counts():
+    """Test cell values reflect absolute observation counts."""
+    data = {
+        'id': ['RWA', 'RWA', 'RWA', 'GAB', 'GAB'],
+        'year': [2020, 2020, 2021, 2020, 2021],
+    }
+    df = pd.DataFrame(data)
+    ax = overview_heat(df, 'id', 'year', show_plot=False)
+    # Extract the image data from imshow
+    img = ax.images[0]
+    data_array = img.get_array()
+    # pivot is sorted by id: GAB row 0, RWA row 1; cols sorted: 2020, 2021
+    assert data_array[0, 0] == 1  # GAB/2020
+    assert data_array[0, 1] == 1  # GAB/2021
+    assert data_array[1, 0] == 2  # RWA/2020
+    assert data_array[1, 1] == 1  # RWA/2021
+    plt.close('all')
+
+
+def test_overview_heat_percentage():
+    """Test cell values are percentages when perc=True."""
+    data = {
+        'id': ['RWA', 'RWA', 'GAB'],
+        'year': [2020, 2021, 2020],
+    }
+    df = pd.DataFrame(data)
+    ax = overview_heat(df, 'id', 'year', perc=True, exp_total=2, show_plot=False)
+    img = ax.images[0]
+    data_array = img.get_array()
+    # GAB/2020 = 1/2*100 = 50.0
+    assert data_array[0, 0] == pytest.approx(50.0)
+    plt.close('all')
+
+
+def test_overview_heat_perc_requires_exp_total():
+    """Test that perc=True without exp_total raises ValueError."""
+    df = pd.DataFrame({'id': ['A'], 'year': [2020]})
+    with pytest.raises(ValueError, match="exp_total"):
+        overview_heat(df, 'id', 'year', perc=True, show_plot=False)
 
 
 def test_overview_summary():
