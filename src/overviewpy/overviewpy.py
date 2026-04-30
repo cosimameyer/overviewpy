@@ -1,4 +1,6 @@
+import warnings
 import matplotlib
+import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import matplotlib.ticker
 import pandas as pd
@@ -269,6 +271,41 @@ class Overview:
 
         return ax
 
+    def overview_overlap(
+        self,
+        dat2: pd.DataFrame,
+        dat2_id: str,
+        dat1_name: str = "Data set 1",
+        dat2_name: str = "Data set 2",
+        plot_type: str = "bar",
+        show_plot: bool = True,
+    ) -> matplotlib.axes.Axes:
+        """Plots the ID overlap between this data set and a second one.
+
+        Args:
+            dat2: Second data set to compare against.
+            dat2_id: Column name of the ID variable in dat2.
+            dat1_name: Label for this data set in the plot. Defaults to "Data set 1".
+            dat2_name: Label for dat2 in the plot. Defaults to "Data set 2".
+            plot_type: "bar" for a grouped bar chart, "venn" for a Venn diagram.
+            show_plot: Whether to display the plot. Defaults to True.
+
+        Returns:
+            matplotlib.axes.Axes: A plot visualising the overlap of the two data sets.
+
+        Raises:
+            ValueError: If plot_type is not "bar" or "venn".
+        """
+        return overview_overlap(
+            self.df, dat2,
+            dat1_id=self.id,
+            dat2_id=dat2_id,
+            dat1_name=dat1_name,
+            dat2_name=dat2_name,
+            plot_type=plot_type,
+            show_plot=show_plot,
+        )
+
 
 def overview_tab(df: pd.DataFrame, id: str, time: int) -> pd.DataFrame:
     """Backward-compatible accessor for Overview.overview_tab. Deprecated since 0.2.0."""
@@ -338,3 +375,75 @@ def overview_plot(
         dot_size=dot_size,
         show_plot=show_plot,
     )
+
+
+def overview_overlap(
+    dat1: pd.DataFrame,
+    dat2: pd.DataFrame,
+    dat1_id: str,
+    dat2_id: str,
+    dat1_name: str = "Data set 1",
+    dat2_name: str = "Data set 2",
+    plot_type: str = "bar",
+    show_plot: bool = True,
+) -> matplotlib.axes.Axes:
+    """Provides an overview of the overlap of two data sets.
+
+    Args:
+        dat1 (pd.DataFrame): First data set.
+        dat2 (pd.DataFrame): Second data set.
+        dat1_id (str): Column name of the ID variable in dat1.
+        dat2_id (str): Column name of the ID variable in dat2.
+        dat1_name (str): Label for dat1 in the plot. Defaults to "Data set 1".
+        dat2_name (str): Label for dat2 in the plot. Defaults to "Data set 2".
+        plot_type (str): Type of plot — "bar" for a grouped bar chart,
+                         "venn" for a Venn diagram. Defaults to "bar".
+        show_plot (bool): Whether to display the plot. Defaults to True.
+
+    Returns:
+        matplotlib.axes.Axes: A plot visualizing the overlap of the two data sets.
+
+    Raises:
+        ValueError: If plot_type is not "bar" or "venn".
+    """
+    if plot_type not in ("bar", "venn"):
+        raise ValueError(f"plot_type must be 'bar' or 'venn', got {plot_type!r}")
+
+    if plot_type == "bar":
+        counts1 = dat1[dat1_id].value_counts().rename(dat1_name)
+        counts2 = dat2[dat2_id].value_counts().rename(dat2_name)
+        merged = pd.concat([counts1, counts2], axis=1).fillna(0).sort_index()
+
+        ax = merged.plot(kind="bar", color=["#dceaf2", "#2A5773"], edgecolor="gray", width=0.7)
+        ax.set_xlabel("Identifier")
+        ax.set_ylabel("Count (absolute number of observations)")
+        ax.set_title("Overlap of data sets")
+        ax.legend([dat1_name, dat2_name])
+
+        if show_plot:
+            plt.show()
+        return ax
+
+    set1 = set(dat1[dat1_id].dropna())
+    set2 = set(dat2[dat2_id].dropna())
+    only1 = len(set1 - set2)
+    only2 = len(set2 - set1)
+    both = len(set1 & set2)
+
+    _, ax = plt.subplots()
+    ax.add_patch(mpatches.Circle((0.35, 0.5), 0.3, color="#dceaf2", alpha=0.9))
+    ax.add_patch(mpatches.Circle((0.65, 0.5), 0.3, color="#2A5773", alpha=0.5))
+    ax.text(0.2, 0.5, str(only1), ha="center", va="center", fontsize=14, fontweight="bold")
+    ax.text(0.5, 0.5, str(both), ha="center", va="center", fontsize=14, fontweight="bold", color="white")
+    ax.text(0.8, 0.5, str(only2), ha="center", va="center", fontsize=14, fontweight="bold")
+    ax.text(0.25, 0.83, dat1_name, ha="center", va="center", fontsize=11)
+    ax.text(0.75, 0.83, dat2_name, ha="center", va="center", fontsize=11)
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0.1, 0.95)
+    ax.set_aspect("equal")
+    ax.axis("off")
+    ax.set_title("Overlap of data sets")
+
+    if show_plot:
+        plt.show()
+    return ax

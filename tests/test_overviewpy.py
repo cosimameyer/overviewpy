@@ -1,10 +1,11 @@
 import warnings
+import pytest
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-from overviewpy.overviewpy import overview_tab, overview_na, overview_summary, overview_plot
+from overviewpy.overviewpy import overview_tab, overview_na, overview_summary, overview_plot, overview_overlap
 
 
 
@@ -223,3 +224,49 @@ def test_overview_plot_consecutive_segments():
     scatter_collections = [c for c in ax.collections if hasattr(c, 'get_offsets')]
     assert len(scatter_collections) == 2, "Expected 2 scatter segments for a gap in time"
     plt.close("all")
+
+
+def test_overview_overlap_bar():
+    """Tests that overview_overlap returns Axes for plot_type='bar'."""
+    dat1 = pd.DataFrame({"id": ["RWA", "RWA", "GAB", "FRA", "BEL"]})
+    dat2 = pd.DataFrame({"id": ["RWA", "GAB", "GAB", "ARG"]})
+
+    ax = overview_overlap(dat1, dat2, dat1_id="id", dat2_id="id", show_plot=False)
+
+    assert isinstance(ax, matplotlib.axes.Axes), "Expected a matplotlib Axes"
+
+
+def test_overview_overlap_venn():
+    """Tests that overview_overlap returns Axes for plot_type='venn'."""
+    dat1 = pd.DataFrame({"id": ["RWA", "RWA", "GAB", "FRA"]})
+    dat2 = pd.DataFrame({"id": ["RWA", "GAB", "ARG"]})
+
+    ax = overview_overlap(dat1, dat2, dat1_id="id", dat2_id="id", plot_type="venn", show_plot=False)
+
+    assert isinstance(ax, matplotlib.axes.Axes), "Expected a matplotlib Axes"
+
+
+def test_overview_overlap_custom_names():
+    """Tests that custom dataset names are accepted without error."""
+    dat1 = pd.DataFrame({"country": ["RWA", "GAB"]})
+    dat2 = pd.DataFrame({"country": ["GAB", "FRA"]})
+
+    ax = overview_overlap(
+        dat1, dat2,
+        dat1_id="country",
+        dat2_id="country",
+        dat1_name="Survey A",
+        dat2_name="Survey B",
+        show_plot=False,
+    )
+
+    assert isinstance(ax, matplotlib.axes.Axes)
+
+
+def test_overview_overlap_invalid_plot_type():
+    """Tests that an invalid plot_type raises ValueError."""
+    dat1 = pd.DataFrame({"id": ["RWA"]})
+    dat2 = pd.DataFrame({"id": ["GAB"]})
+
+    with pytest.raises(ValueError, match="plot_type must be"):
+        overview_overlap(dat1, dat2, dat1_id="id", dat2_id="id", plot_type="pie")
