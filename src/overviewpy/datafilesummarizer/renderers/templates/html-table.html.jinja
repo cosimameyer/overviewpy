@@ -1,0 +1,51 @@
+<html>
+    <head>
+        <style>
+            table, th, td {
+                border: 1px solid;
+            }
+            th, td {
+                padding: 10px;
+                text-align: left;
+                vertical-align: top;
+            }
+            .summary {
+                padding: 20px 0px 20px 0px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>{{ filename }} Summary</h1>
+            <div class = "summary">
+                <div>Contains {{ rowCount }} rows of {{ columnCount }} columns.</div>
+            </div>
+        <table>
+        <thead>
+            <tr>
+                <th>Column name</th>
+                <th>Non-Null values</th>
+                <th>Unique Non-Null values</th>
+                <th>Example values</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        {% for column in columnDetails %}
+            <tr>
+                <td>{{ column.colName }}</td>
+                <td>{{ column.nonNullCount }}</td>
+                <td>{{ column.uniquesCount }}</td>
+                <td>
+                    <ul>
+                    {% for sample in column.sampleValues %}
+                        <li>{{ sample }}</li>
+                    {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+        </table>
+    </body>
+</html>

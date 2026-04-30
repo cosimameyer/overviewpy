@@ -6,7 +6,7 @@ This guide walks you through everything you need to get `overviewpy` running loc
 
 | Tool | Purpose | Install |
 |------|---------|---------|
-| [Python](https://www.python.org/) ≥ 3.9 | Runtime | [python.org](https://www.python.org/downloads/) or via your system package manager |
+| [Python](https://www.python.org/) ≥ 3.10 | Runtime | [python.org](https://www.python.org/downloads/) or via your system package manager |
 | [uv](https://docs.astral.sh/uv/) | Package & virtual environment manager | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
 | [Git](https://git-scm.com/) | Version control | [git-scm.com](https://git-scm.com/downloads) |
 | [GitHub CLI](https://cli.github.com/) *(optional)* | Open PRs, review issues from the terminal | `brew install gh` / [cli.github.com](https://cli.github.com/) |

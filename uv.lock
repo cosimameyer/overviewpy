@@ -2334,7 +2334,7 @@ wheels = [
 
 [[package]]
 name = "overviewpy"
-version = "0.1.1"
+version = "0.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "matplotlib" },
@@ -2367,6 +2367,7 @@ test = [
 
 [package.metadata]
 requires-dist = [
+    { name = "jinja2", specifier = ">=3.1.2" },
     { name = "markdown-include", marker = "extra == 'docs'", specifier = ">=0.8.1" },
     { name = "matplotlib", specifier = ">=3.7.2" },
     { name = "mkdocs", marker = "extra == 'docs'", specifier = ">=1.4.3" },
@@ -2382,12 +2383,12 @@ dev = [
     { name = "jupyter", specifier = ">=1.0.0" },
     { name = "myst-nb", specifier = ">=0.17.2" },
     { name = "pydata-sphinx-theme", specifier = ">=0.13.3" },
-    { name = "pytest", specifier = ">=8.1.0" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "python-semantic-release", specifier = ">=8.1.1" },
     { name = "sphinx-autoapi", specifier = ">=2.1.1" },
     { name = "sphinx-rtd-theme", specifier = ">=1.2.2" },
 ]
-test = [{ name = "pytest", specifier = ">=8.1.0" }]
+test = [{ name = "pytest", specifier = ">=9.0.3" }]
 
 [[package]]
 name = "packaging"
