@@ -9,8 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
-        with:
-          python-version: "3.x"
       - run: uv pip install --system mkdocs \
               mkdocs-material \
               mkdocstrings-python \
