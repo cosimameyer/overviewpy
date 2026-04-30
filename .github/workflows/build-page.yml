@@ -10,11 +10,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
         with:
-          python-version: "3.x"
-      - run: uv pip install --system mkdocs \
+          python-version: "3.11"
+      - run: uv pip install mkdocs \
               mkdocs-material \
               mkdocstrings-python \
               mkdocs-jupyter \
               markdown_include \
               overviewpy
-      - run: mkdocs gh-deploy --force --clean --verbose
+      - run: uv run mkdocs gh-deploy --force --clean --verbose
