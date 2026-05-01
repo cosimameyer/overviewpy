@@ -26,24 +26,40 @@ class Overview:
         self.id = id
         self.time = time
 
-    def overview_tab(self):
+    def overview_tab(self) -> pd.DataFrame:
         """Generates a tabular overview of the sample and returns a data frame.
 
+        Collapses the time variable per id into compact ranges (e.g. "2013-2015,
+        2019"). Rows where id or time is NA are dropped automatically and a
+        ``UserWarning`` is raised for each affected variable.
+
         Returns:
-            pd.DataFrame: Reduced data frame with id and time_frame columns.
+            pd.DataFrame: Two-column frame with id and time_frame columns, one
+            row per unique id.
         """
-        df2 = self.df.dropna(subset=[self.id]).copy()
-        if len(df2) != len(self.df):
-            print("There is at least one missing value in your id variable. The missing value is automatically deleted.")
+        df_no_id_na = self.df.dropna(subset=[self.id]).copy()
+        if len(df_no_id_na) != len(self.df):
+            warnings.warn(
+                "There is at least one missing value in your id variable. The missing value is automatically deleted.",
+                UserWarning,
+                stacklevel=2,
+            )
 
-        df_no_dup = df2.filter(items=[self.id, self.time]).drop_duplicates()
+        df_clean = df_no_id_na.dropna(subset=[self.time]).copy()
+        if len(df_clean) != len(df_no_id_na):
+            warnings.warn(
+                "There is at least one missing value in your time variable. The missing value is automatically deleted.",
+                UserWarning,
+                stacklevel=2,
+            )
 
-        if len(df_no_dup) != len(df2):
-            print("There are some duplicates. We aggregate the data before proceeding.")
+        df_no_dup = df_clean.filter(items=[self.id, self.time]).drop_duplicates().copy()
+
+        if len(df_no_dup) != len(df_clean):
+            warnings.warn("There are some duplicates. We aggregate the data before proceeding.", UserWarning, stacklevel=2)
 
         df_sorted = df_no_dup.sort_values([self.id, self.time])
         grouped = df_sorted.groupby(self.id)
-        self.df['time_frame'] = df_no_dup[self.time].astype(str)
 
         for _, group_df in grouped:
             numbers = group_df[self.time].tolist()
@@ -71,36 +87,72 @@ class Overview:
             })
         return pd.DataFrame(rows).set_index('column')
 
-    def overview_na(self, show_plot: bool = True, relative: bool = False) -> matplotlib.axes.Axes:
-        """Plots an overview of missing values by variable.
+    def overview_na(
+        self,
+        show_plot: bool = True,
+        yaxis: str = "Variables",
+        perc: bool = True,
+        row_wise: bool = False,
+        add: bool = False,
+    ) -> matplotlib.axes.Axes | pd.DataFrame:
+        """Plots an overview of missing values or augments the data frame with NA counts.
 
         Args:
             show_plot: Whether to display the plot. Defaults to True.
-            relative: If True, shows percentage of missing values instead of absolute count.
-                Defaults to False.
+            yaxis: Y-axis label. Defaults to "Variables". Overridden to "Observations" when row_wise=True.
+            perc: If True (default), plot shows percentage of NAs; if False, shows absolute counts.
+            row_wise: If True, calculates NAs per row instead of per column. Defaults to False.
+            add: If True (only used with row_wise=True), returns the original data frame with
+                na_count and percentage columns appended instead of a plot. Defaults to False.
 
         Returns:
-            matplotlib.axes.Axes: Horizontal bar plot sorted with the highest-missing variable
-                at the top.
+            matplotlib.axes.Axes when a plot is produced, or pd.DataFrame when add=True.
         """
-        na_counts = self.df.isna().sum()
-
-        if relative:
-            values = (na_counts / len(self.df) * 100).sort_values(ascending=False)
-            xlabel = "Percentage (%)"
+        if row_wise:
+            yaxis = "Observations"
+            na_count = self.df.isna().sum(axis=1)
+            total = len(self.df.columns)
+            if add:
+                return self.df.assign(
+                    na_count=na_count.values,
+                    percentage=na_count.values / total * 100,
+                )
+            result = pd.DataFrame({
+                "variable": range(1, len(self.df) + 1),
+                "na_count": na_count.values,
+                "percentage": na_count.values / total * 100,
+            })
         else:
-            values = na_counts.sort_values(ascending=False)
-            xlabel = "Count"
+            na_count = self.df.isna().sum()
+            total = len(self.df)
+            result = pd.DataFrame({
+                "variable": na_count.index,
+                "na_count": na_count.values,
+                "percentage": na_count.values / total * 100,
+            })
 
-        ax = values.plot(kind="barh")
-        ax.invert_yaxis()
-        ax.set_xlabel(xlabel)
-        ax.set_ylabel("Columns")
-        plt.title("Missing Values Overview")
+        x = "percentage" if perc else "na_count"
+        xaxis = "Number of NA (in %)" if perc else "Number of NA (total)"
+        return self._plot_na(result, x=x, yaxis=yaxis, xaxis=xaxis, show_plot=show_plot)
 
+    def _plot_na(
+        self,
+        result: pd.DataFrame,
+        x: str,
+        yaxis: str,
+        xaxis: str,
+        show_plot: bool,
+    ) -> matplotlib.axes.Axes:
+        sorted_result = result.sort_values(x, ascending=True)
+        fig, ax = plt.subplots()
+        ax.barh(sorted_result["variable"].astype(str), sorted_result[x])
+        ax.set_xlabel(xaxis)
+        ax.set_ylabel(yaxis)
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        ax.tick_params(left=False, bottom=False)
         if show_plot:
             plt.show()
-
         return ax
 
     def overview_plot(
@@ -223,9 +275,18 @@ def overview_tab(df: pd.DataFrame, id: str, time: int) -> pd.DataFrame:
     return Overview(df, id, time).overview_tab()
 
 
-def overview_na(df: pd.DataFrame, show_plot: bool = True, relative: bool = False) -> matplotlib.axes.Axes:
+def overview_na(
+    df: pd.DataFrame,
+    show_plot: bool = True,
+    yaxis: str = "Variables",
+    perc: bool = True,
+    row_wise: bool = False,
+    add: bool = False,
+) -> matplotlib.axes.Axes | pd.DataFrame:
     """Backward-compatible accessor for Overview.overview_na. Deprecated since 0.2.0."""
-    return Overview(df, None, None).overview_na(show_plot=show_plot, relative=relative)
+    return Overview(df, None, None).overview_na(
+        show_plot=show_plot, yaxis=yaxis, perc=perc, row_wise=row_wise, add=add
+    )
 
 
 def overview_summary(df: pd.DataFrame) -> pd.DataFrame:

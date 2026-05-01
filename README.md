@@ -28,8 +28,11 @@ Generate some general overview of the data set using the time and scope
 conditions with `overview_tab`. The resulting data frame collapses the time condition for each `id` by
 taking into account potential gaps in the time frame.
 
+Rows with missing values in either the `id` or `time` column are automatically
+dropped and a `UserWarning` is raised for each affected variable.
+
 ```python
-from overviewpy.overviewpy import overview_tab
+from overviewpy.overviewpy import Overview
 import pandas as pd
 
 data = {
@@ -41,17 +44,39 @@ data = {
 
 df = pd.DataFrame(data)
 
-df_overview = overview_tab(df=df, id='id', time='year')
+overview = Overview(df=df, id='id', time='year')
+df_overview = overview.overview_tab()
+```
+
+If your data contains missing values in `id` or `year`, they are silently
+removed and you will see a warning — no extra preprocessing needed:
+
+```python
+import numpy as np
+
+data_with_na = {
+    'id': ['RWA', 'RWA', np.nan, 'GAB'],
+    'year': [2022, np.nan, 2021, 2020],
+}
+
+df_na = pd.DataFrame(data_with_na)
+
+# UserWarning: missing id and time values are dropped automatically
+overview = Overview(df=df_na, id='id', time='year')
+df_overview = overview.overview_tab()
 ```
 
 #### `overview_na`
 
-`overview_na` returns a horizontal bar plot showing the amount of missing
-data (NAs) for each variable, sorted from most to least missing. By default
-it shows absolute counts; pass `relative=True` to display percentages instead.
+`overview_na` visualises missing values in your data. It returns a 
+horizontal bar plot showing the amount of missing data (NAs) for each variable, 
+sorted from most to least missing. By default it shows absolute counts; 
+pass `relative=True` to display percentages instead.
+You can also augment the
+original data frame with the computed NA counts and percentages.
 
 ```python
-from overviewpy.overviewpy import overview_na
+from overviewpy.overviewpy import Overview
 import pandas as pd
 import numpy as np
 
@@ -64,20 +89,43 @@ data_na = {
 
 df_na = pd.DataFrame(data_na)
 
-overview_na(df_na)              # absolute counts (default)
-overview_na(df_na, relative=True)  # percentages
+ov_na = Overview(df=df_na, id='id', time='year')
+
+# Default: column-wise, percentage
+ov_na.overview_na()
+
+# Absolute counts instead of percentage
+ov_na.overview_na(perc=False)
+
+# Custom y-axis label
+ov_na.overview_na(yaxis="My Variables")
+
+# Row-wise: one bar per observation
+ov_na.overview_na(row_wise=True)
+
+# Row-wise and augment the data frame with na_count and percentage columns
+df_with_na = ov_na.overview_na(row_wise=True, add=True)
 ```
+
+Column-wise output (default):
+
+![overview_na column-wise](docs/img/overview_na_column.png)
+
+Row-wise output:
+
+![overview_na row-wise](docs/img/overview_na_row.png)
 
 #### `overview_summary`
 
 Use `overview_summary` to get a quick structured overview of any data frame:
 
 ```python
-from overviewpy.overviewpy import overview_summary
+from overviewpy.overviewpy import Overview
 import pandas as pd
 
 df = pd.read_csv("mydata.csv")
-overview_summary(df)
+overview = Overview(df=df, id=None, time=None)
+overview.overview_summary()
 ```
 
 This returns a data frame with one row per column containing `non_null_count`, `unique_count`, and `sample_values`.
