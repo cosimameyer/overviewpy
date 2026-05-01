@@ -31,7 +31,7 @@ Rows with missing values in either the `id` or `time` column are automatically
 dropped and a `UserWarning` is raised for each affected variable.
 
 ```python
-from overviewpy.overviewpy import overview_tab
+from overviewpy.overviewpy import Overview
 import pandas as pd
 
 data = {
@@ -43,7 +43,8 @@ data = {
 
 df = pd.DataFrame(data)
 
-df_overview = overview_tab(df=df, id='id', time='year')
+overview = Overview(df=df, id='id', time='year')
+df_overview = overview.overview_tab()
 ```
 
 If your data contains missing values in `id` or `year`, they are silently
@@ -60,7 +61,8 @@ data_with_na = {
 df_na = pd.DataFrame(data_with_na)
 
 # UserWarning: missing id and time values are dropped automatically
-df_overview = overview_tab(df=df_na, id='id', time='year')
+overview = Overview(df=df_na, id='id', time='year')
+df_overview = overview.overview_tab()
 ```
 
 #### `overview_na`
@@ -71,7 +73,7 @@ the default) or per observation (row-wise). You can also augment the
 original data frame with the computed NA counts and percentages.
 
 ```python
-from overviewpy.overviewpy import overview_na
+from overviewpy.overviewpy import Overview
 import pandas as pd
 import numpy as np
 
@@ -84,32 +86,43 @@ data_na = {
 
 df_na = pd.DataFrame(data_na)
 
+ov_na = Overview(df=df_na, id='id', time='year')
+
 # Default: column-wise, percentage
-overview_na(df_na)
+ov_na.overview_na()
 
 # Absolute counts instead of percentage
-overview_na(df_na, perc=False)
+ov_na.overview_na(perc=False)
 
 # Custom y-axis label
-overview_na(df_na, yaxis="My Variables")
+ov_na.overview_na(yaxis="My Variables")
 
 # Row-wise: one bar per observation
-overview_na(df_na, row_wise=True)
+ov_na.overview_na(row_wise=True)
 
 # Row-wise and augment the data frame with na_count and percentage columns
-df_with_na = overview_na(df_na, row_wise=True, add=True)
+df_with_na = ov_na.overview_na(row_wise=True, add=True)
 ```
+
+Column-wise output (default):
+
+![overview_na column-wise](docs/img/overview_na_column.png)
+
+Row-wise output:
+
+![overview_na row-wise](docs/img/overview_na_row.png)
 
 #### `overview_summary`
 
 Use `overview_summary` to get a quick structured overview of any data frame:
 
 ```python
-from overviewpy.overviewpy import overview_summary
+from overviewpy.overviewpy import Overview
 import pandas as pd
 
 df = pd.read_csv("mydata.csv")
-overview_summary(df)
+overview = Overview(df=df, id=None, time=None)
+overview.overview_summary()
 ```
 
 This returns a data frame with one row per column containing `non_null_count`, `unique_count`, and `sample_values`.
