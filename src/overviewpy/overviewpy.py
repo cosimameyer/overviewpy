@@ -1,5 +1,6 @@
 import warnings
 import matplotlib
+import matplotlib.colors
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import matplotlib.ticker
@@ -88,6 +89,82 @@ class Overview:
                 'sample_values': list(non_null.unique()[:5]),
             })
         return pd.DataFrame(rows).set_index('column')
+
+    def overview_heat(
+        self,
+        perc: bool = False,
+        exp_total: int | None = None,
+        xaxis: str = "Time frame",
+        yaxis: str = "Sample",
+        col_low: str = "#dceaf2",
+        col_high: str = "#2A5773",
+        label: bool = True,
+        show_plot: bool = True,
+    ) -> matplotlib.axes.Axes:
+        """Plots a heat map of observation counts (or percentages) per time-scope-unit.
+
+        Args:
+            perc: If False (default), shows absolute count per cell. If True, shows percentage.
+            exp_total: Expected total observations per time unit (denominator for percentages).
+                Required when perc=True.
+            xaxis: X-axis label. Defaults to "Time frame".
+            yaxis: Y-axis label. Defaults to "Sample".
+            col_low: Hex color for the lowest value. Defaults to "#dceaf2".
+            col_high: Hex color for the highest value. Defaults to "#2A5773".
+            label: If True (default), display values inside each cell.
+            show_plot: Whether to display the plot. Defaults to True.
+
+        Returns:
+            matplotlib.axes.Axes: Heat map of coverage across time-scope-units.
+
+        Raises:
+            ValueError: If perc=True but exp_total is not provided.
+        """
+        if perc and exp_total is None:
+            raise ValueError("exp_total must be provided when perc=True.")
+
+        counts = (
+            self.df.groupby([self.id, self.time])
+            .size()
+            .reset_index(name="n")
+        )
+
+        if perc:
+            counts["n"] = counts["n"] / exp_total * 100
+
+        pivot = (
+            counts.pivot(index=self.id, columns=self.time, values="n")
+            .fillna(0)
+            .sort_index()
+        )
+
+        cmap = matplotlib.colors.LinearSegmentedColormap.from_list(
+            "overview_heat", [col_low, col_high]
+        )
+
+        _, ax = plt.subplots()
+        ax.imshow(pivot.values, cmap=cmap, aspect="auto")
+
+        ax.set_xticks(range(len(pivot.columns)))
+        ax.set_xticklabels(pivot.columns)
+        ax.set_yticks(range(len(pivot.index)))
+        ax.set_yticklabels(pivot.index)
+        ax.set_xlabel(xaxis)
+        ax.set_ylabel(yaxis)
+
+        if label:
+            threshold = (pivot.values.max() + pivot.values.min()) / 2
+            for i in range(len(pivot.index)):
+                for j in range(len(pivot.columns)):
+                    val = pivot.values[i, j]
+                    text = f"{val:.1f}%" if perc else str(int(val))
+                    color = "white" if val >= threshold else "black"
+                    ax.text(j, i, text, ha="center", va="center", color=color, fontsize=8)
+
+        if show_plot:
+            plt.show()
+
+        return ax
 
     def overview_na(
         self,
@@ -261,10 +338,11 @@ class Overview:
             ax.legend(
                 handles=handles,
                 loc="lower center",
-                bbox_to_anchor=(0.5, -0.15),
+                bbox_to_anchor=(0.5, -0.2),
                 ncol=len(color_vals),
                 frameon=False,
             )
+            fig.tight_layout()
 
         if show_plot:
             plt.show()
@@ -323,6 +401,32 @@ def overview_na(
     """Backward-compatible accessor for Overview.overview_na. Deprecated since 0.2.0."""
     return Overview(df, None, None).overview_na(
         show_plot=show_plot, yaxis=yaxis, perc=perc, row_wise=row_wise, add=add
+    )
+
+
+def overview_heat(
+    df: pd.DataFrame,
+    id: str,
+    time: str,
+    perc: bool = False,
+    exp_total: int | None = None,
+    xaxis: str = "Time frame",
+    yaxis: str = "Sample",
+    col_low: str = "#dceaf2",
+    col_high: str = "#2A5773",
+    label: bool = True,
+    show_plot: bool = True,
+) -> matplotlib.axes.Axes:
+    """Backward-compatible accessor for Overview.overview_heat. Deprecated since 0.2.0."""
+    return Overview(df, id, time).overview_heat(
+        perc=perc,
+        exp_total=exp_total,
+        xaxis=xaxis,
+        yaxis=yaxis,
+        col_low=col_low,
+        col_high=col_high,
+        label=label,
+        show_plot=show_plot,
     )
 
 
