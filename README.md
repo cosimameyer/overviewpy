@@ -25,7 +25,8 @@ The goal of `overviewpy` is to make it easy to get an overview of a data set by 
 - `overview_overlap` plots comparison plots (bar chart or Venn diagram) to compare the ID coverage of two data frames
 - `overview_heat` plots a heat map of observation counts (or percentages) for each id-time combination
 - `overview_crossplot` plots a scatter of two conditions split by their thresholds, dividing observations into four quadrants
-- `overview_latex` converts the output of `overview_tab` (or a future `overview_crosstab`) into a LaTeX table, which can be printed or saved directly as a `.tex` file.
+- `overview_crosstab` sorts observations into a 2×2 cross table based on two conditions and their thresholds
+- `overview_latex` converts the output of `overview_tab` or `overview_crosstab` into a LaTeX table, which can be printed or saved directly as a `.tex` file.
 
 #### `overview_tab`
 
@@ -326,6 +327,39 @@ ovw.overview_latex(df_overview, title="Time and scope", id="Country", time="Year
 ovw.overview_latex(df_overview, save_out=True, file_path="output.tex")
 ```
 
+#### `overview_crosstab`
+
+`overview_crosstab` sorts a dataset into a 2×2 cross table based on two numeric conditions and their thresholds. Each cell lists the id–time entries that fall into that quadrant.
+
+```python
+from overviewpy.overviewpy import Overview
+import pandas as pd
+
+data = {
+    'id':  ['RWA', 'RWA', 'GAB', 'GAB', 'FRA', 'FRA', 'BEL', 'BEL', 'ARG'],
+    'year': [2020,  2021,  2020,  2021,  2020,  2021,  2020,  2021,  2020],
+    'gdp':  [30000, 32000, 20000, 21000, 35000, 36000, 15000, 15500, 28000],
+    'pop':  [13000000, 13500000, 2300000, 2400000, 67000000, 68000000,
+             11500000, 11600000, 45000000],
+}
+
+df = pd.DataFrame(data)
+ovw = Overview(df=df, id='id', time='year')
+
+ovw.overview_crosstab(
+    cond1='gdp',
+    cond2='pop',
+    threshold1=25000,
+    threshold2=10000000,
+)
+```
+
+The result is a 2×2 `DataFrame` whose rows and columns are labelled by the threshold conditions:
+
+![overview_crosstab output](docs/img/overview_crosstab.png)
+
+If duplicate `(id, time)` pairs exist, the conditions are averaged before thresholding. Missing values in `id` are dropped automatically.
+
 ##### Command line
 
 Alternatively, run the summarizer from the command line to generate an HTML report:
@@ -361,11 +395,6 @@ Below that frontmatter is a table listing, for each included column in the file:
 2. The number of non-null/empty values for that column
 3. The number of unique non-null values for that column
 4. A set of 5 example values found in that column.
-
-### Roadmap
-`overviewpy` seeks to mirror the functionality of [`overviewR`](https://github.com/cosimameyer/overviewR) and will extend its features with the following functionality in the future:
-
--   `overview_crosstab` generates a cross table. The conditional column allows to disaggregate the overview table by specifying two conditions, hence resulting a 2x2 table. This way, it is easy to visualize the time and scope conditions as well as theoretical assumptions with examples from the data set.
 
 ## Contributing
 
