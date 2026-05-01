@@ -27,6 +27,9 @@ Generate some general overview of the data set using the time and scope
 conditions with `overview_tab`. The resulting data frame collapses the time condition for each `id` by
 taking into account potential gaps in the time frame.
 
+Rows with missing values in either the `id` or `time` column are automatically
+dropped and a `UserWarning` is raised for each affected variable.
+
 ```python
 from overviewpy.overviewpy import overview_tab
 import pandas as pd
@@ -41,6 +44,23 @@ data = {
 df = pd.DataFrame(data)
 
 df_overview = overview_tab(df=df, id='id', time='year')
+```
+
+If your data contains missing values in `id` or `year`, they are silently
+removed and you will see a warning — no extra preprocessing needed:
+
+```python
+import numpy as np
+
+data_with_na = {
+    'id': ['RWA', 'RWA', np.nan, 'GAB'],
+    'year': [2022, np.nan, 2021, 2020],
+}
+
+df_na = pd.DataFrame(data_with_na)
+
+# UserWarning: missing id and time values are dropped automatically
+df_overview = overview_tab(df=df_na, id='id', time='year')
 ```
 
 #### `overview_na`
