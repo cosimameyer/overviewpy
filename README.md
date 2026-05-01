@@ -20,6 +20,7 @@ The goal of `overviewpy` is to make it easy to get an overview of a data set by 
 - `overview_tab` generates a tabular overview of the sample (and returns a data frame). The general sample plots a two-column table that provides information on an id in the left column and a the time frame on the right column.
 - `overview_na` plots an overview of missing values by variable (both by row and by column)
 - `overview_summary` returns a per-column summary of any data frame (non-null count, unique count, sample values)
+- `overview_plot` visualizes observation presence across id and time as a connected dot-plot
 
 #### `overview_tab`
 
@@ -47,6 +48,10 @@ overview = Overview(df=df, id='id', time='year')
 df_overview = overview.overview_tab()
 ```
 
+The output is a data frame with one row per id and a `time_frame` column that compresses consecutive years into ranges (e.g. `2021-2023`) and non-consecutive years as a comma-separated list (e.g. `2015, 2019`):
+
+![overview_tab output](docs/img/overview_tab.png)
+
 If your data contains missing values in `id` or `year`, they are silently
 removed and you will see a warning — no extra preprocessing needed:
 
@@ -68,9 +73,11 @@ df_overview = overview.overview_tab()
 #### `overview_na`
 
 `overview_na` visualises missing values in your data. It returns a
-horizontal bar chart showing the share of NAs per variable (column-wise,
-the default) or per observation (row-wise). You can also augment the
-original data frame with the computed NA counts and percentages.
+horizontal bar plot showing the amount of missing data (NAs) for each variable,
+sorted from most to least missing. By default it shows percentages (`perc=True`);
+pass `perc=False` to display absolute counts instead. Switch to `row_wise=True`
+for a per-observation view, or set `add=True` to append the NA statistics
+directly to your data frame.
 
 ```python
 from overviewpy.overviewpy import Overview
@@ -125,7 +132,41 @@ overview = Overview(df=df, id=None, time=None)
 overview.overview_summary()
 ```
 
-This returns a data frame with one row per column containing `non_null_count`, `unique_count`, and `sample_values`.
+This returns a data frame with one row per column containing `non_null_count`, `unique_count`, and `sample_values`:
+
+![overview_summary output](docs/img/overview_summary.png)
+
+#### `overview_plot`
+
+`overview_plot` visualizes the presence of observations across the id and time
+dimensions. Each id appears as a row; time is on the x-axis. Consecutive time
+periods are connected by a line; gaps in coverage produce separate disconnected
+clusters. Optionally color-code points by a third variable.
+
+```python
+from overviewpy.overviewpy import overview_plot
+import pandas as pd
+
+data = {
+    'id': ['RWA', 'RWA', 'RWA', 'GAB', 'GAB', 'FRA', 'FRA', 'BEL', 'BEL', 'ARG'],
+    'year': [2022, 2023, 2021, 2023, 2020, 2019, 2015, 2014, 2013, 2002]
+}
+
+df = pd.DataFrame(data)
+
+overview_plot(df, id='id', time='year')
+```
+
+![overview_plot output](docs/img/overview_plot.png)
+
+You can color-code the points by a third variable using the `color` parameter:
+
+```python
+# color-code points by a third variable
+overview_plot(df, id='id', time='year', color='regime')
+```
+
+![overview_plot output with color](docs/img/overview_plot_color.png)
 
 ##### Command line
 
@@ -168,7 +209,6 @@ Below that frontmatter is a table listing, for each included column in the file:
 
 -   `overview_crosstab` generates a cross table. The conditional column allows to disaggregate the overview table by specifying two conditions, hence resulting a 2x2 table. This way, it is easy to visualize the time and scope conditions as well as theoretical assumptions with examples from the data set.
 -   `overview_latex` converts the output of both `overview_tab` and `overview_crosstab` into LaTeX code and/or directly into a .tex file.
--   `overview_plot` is an alternative to visualize the sample (a way to present results from `overview_tab`)
 -   `overview_crossplot` is an alternative to visualize a cross table (a way to present results from `overview_crosstab`)
 -   `overview_heat` plots a heat map of your time line
 -   `overview_overlap` plots comparison plots (bar graph and Venn diagram) to compare to data frames
