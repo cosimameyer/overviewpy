@@ -200,30 +200,6 @@ overview.overview_overlap(dat2=df2, dat2_id='id', dat1_name='Survey 1', dat2_nam
 `overview_heat` plots a heat map that shows how many observations exist for each id-time combination. Set `perc=True` together with `exp_total` to display coverage as a percentage of the expected maximum.
 
 ```python
-from overviewpy.overviewpy import overview_heat
-import pandas as pd
-
-data = {
-       'id': ['RWA', 'RWA', 'RWA', 'GAB', 'GAB', 'FRA', \
-        'FRA', 'BEL', 'BEL', 'ARG'],
-       'year': [2022, 2023, 2021, 2023, 2020, 2019, 2015, \
-        2014, 2013, 2002]
-   }
-
-df = pd.DataFrame(data)
-
-# Absolute counts
-overview_heat(df=df, id='id', time='year')
-
-# Percentage of expected total
-overview_heat(df=df, id='id', time='year', perc=True, exp_total=3)
-```
-
-#### `overview_heat`
-
-`overview_heat` plots a heat map that shows how many observations exist for each id-time combination. Set `perc=True` together with `exp_total` to display coverage as a percentage of the expected maximum.
-
-```python
 from overviewpy.overviewpy import Overview
 import pandas as pd
 

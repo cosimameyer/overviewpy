@@ -338,10 +338,11 @@ class Overview:
             ax.legend(
                 handles=handles,
                 loc="lower center",
-                bbox_to_anchor=(0.5, -0.15),
+                bbox_to_anchor=(0.5, -0.2),
                 ncol=len(color_vals),
                 frameon=False,
             )
+            fig.tight_layout()
 
         if show_plot:
             plt.show()
