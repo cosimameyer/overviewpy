@@ -5,7 +5,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-from overviewpy.overviewpy import overview_tab, overview_na, overview_summary, overview_plot, overview_overlap, overview_heat, overview_crossplot
+from overviewpy.overviewpy import overview_tab, overview_na, overview_summary, overview_plot, overview_overlap, overview_heat, overview_crossplot, overview_latex
 
 def test_overview_tab():
     """Tests output values and shape of overview_tab."""
@@ -488,3 +488,106 @@ def test_overview_crossplot_drops_na_id():
     offsets = ax.collections[0].get_offsets()
     assert len(offsets) == 1, "NaN id rows should be dropped"
     plt.close('all')
+
+
+@pytest.fixture
+def tab_df():
+    data = {
+        'id_column': ['RWA', 'RWA', 'GAB', 'FRA', 'BEL'],
+        'time': [2021, 2022, 2020, 2019, 2013],
+    }
+    return overview_tab(pd.DataFrame(data), 'id_column', 'time')
+
+
+def test_overview_latex_returns_string(tab_df):
+    result = overview_latex(tab_df)
+    assert isinstance(result, str)
+
+
+def test_overview_latex_contains_table_structure(tab_df):
+    result = overview_latex(tab_df)
+    assert r"\begin{table}" in result
+    assert r"\begin{tabular}" in result
+    assert r"\end{table}" in result
+    assert r"\hline" in result
+
+
+def test_overview_latex_default_headers(tab_df):
+    result = overview_latex(tab_df)
+    assert "Sample & Time frame" in result
+
+
+def test_overview_latex_custom_headers(tab_df):
+    result = overview_latex(tab_df, id="Country", time="Years")
+    assert "Country & Years" in result
+
+
+def test_overview_latex_custom_title_and_label(tab_df):
+    result = overview_latex(tab_df, title="My Table", label="tab:mytab")
+    assert r"\caption{My Table}" in result
+    assert r"\label{tab:mytab}" in result
+
+
+def test_overview_latex_fontsize(tab_df):
+    result = overview_latex(tab_df, fontsize="small")
+    assert r"\small" in result
+
+
+def test_overview_latex_contains_data_rows(tab_df):
+    result = overview_latex(tab_df)
+    assert "BEL" in result
+    assert "FRA" in result
+    assert "GAB" in result
+    assert "RWA" in result
+
+
+def test_overview_latex_save_out(tab_df, tmp_path):
+    out_file = tmp_path / "output.tex"
+    overview_latex(tab_df, save_out=True, file_path=str(out_file))
+    assert out_file.exists()
+    content = out_file.read_text()
+    assert r"\begin{table}" in content
+
+
+def test_overview_latex_save_out_requires_file_path(tab_df):
+    with pytest.raises(ValueError, match="file_path"):
+        overview_latex(tab_df, save_out=True)
+
+
+def test_overview_latex_two_row_tab_warns(tab_df):
+    two_row = tab_df.head(2)
+    with pytest.warns(UserWarning, match="crosstab"):
+        overview_latex(two_row)
+
+
+def test_overview_latex_rejects_wrong_column_count():
+    bad_df = pd.DataFrame({'a': [1], 'b': [2], 'c': [3]})
+    with pytest.raises(ValueError, match="two columns"):
+        overview_latex(bad_df)
+
+
+def test_overview_latex_crosstab_rejects_wrong_row_count():
+    bad_df = pd.DataFrame({'col1': ["A", "B", "C"], 'col2': ["D", "E", "F"]})
+    with pytest.raises(ValueError, match="exactly 2 rows"):
+        overview_latex(bad_df, crosstab=True)
+
+
+def test_overview_latex_crosstab_structure():
+    crosstab_df = pd.DataFrame({
+        'col1': ["Country A, Country B", "Country C"],
+        'col2': ["Country D", "Country E, Country F"],
+    })
+    result = overview_latex(
+        crosstab_df,
+        crosstab=True,
+        title="Cross-tab",
+        cond1="GDP",
+        cond2="Population",
+    )
+    assert r"\begin{tabularx}" in result
+    assert r"\multicolumn" in result
+    assert r"\multirow" in result
+    assert "GDP" in result
+    assert "Population" in result
+    assert "Fulfilled" in result
+    assert "Not fulfilled" in result

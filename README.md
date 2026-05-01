@@ -24,6 +24,7 @@ The goal of `overviewpy` is to make it easy to get an overview of a data set by 
 - `overview_overlap` plots comparison plots (bar chart or Venn diagram) to compare the ID coverage of two data frames
 - `overview_heat` plots a heat map of observation counts (or percentages) for each id-time combination
 - `overview_crossplot` plots a scatter of two conditions split by their thresholds, dividing observations into four quadrants
+- `overview_latex` converts the output of `overview_tab` (or a future `overview_crosstab`) into a LaTeX table, which can be printed or saved directly as a `.tex` file.
 
 #### `overview_tab`
 
@@ -252,6 +253,32 @@ overview.overview_crossplot(cond1='gdp', cond2='population',
 
 ![overview_crossplot with color and labels](docs/img/overview_crossplot_color.png)
 
+#### `overview_latex`
+
+Use `overview_latex` to export the result of `overview_tab` as a LaTeX table:
+
+```python
+from overviewpy.overviewpy import Overview
+import pandas as pd
+
+data = {
+       'id': ['RWA', 'RWA', 'RWA', 'GAB', 'GAB', 'FRA',
+               'FRA', 'BEL', 'BEL', 'ARG'],
+       'year': [2022, 2023, 2021, 2023, 2020, 2019, 2015,
+                2014, 2013, 2002]
+   }
+
+df = pd.DataFrame(data)
+ovw = Overview(df=df, id='id', time='year')
+df_overview = ovw.overview_tab()
+
+# Print LaTeX to the console
+ovw.overview_latex(df_overview, title="Time and scope", id="Country", time="Years")
+
+# Save directly to a .tex file
+ovw.overview_latex(df_overview, save_out=True, file_path="output.tex")
+```
+
 ##### Command line
 
 Alternatively, run the summarizer from the command line to generate an HTML report:
@@ -292,7 +319,6 @@ Below that frontmatter is a table listing, for each included column in the file:
 `overviewpy` seeks to mirror the functionality of [`overviewR`](https://github.com/cosimameyer/overviewR) and will extend its features with the following functionality in the future:
 
 -   `overview_crosstab` generates a cross table. The conditional column allows to disaggregate the overview table by specifying two conditions, hence resulting a 2x2 table. This way, it is easy to visualize the time and scope conditions as well as theoretical assumptions with examples from the data set.
--   `overview_latex` converts the output of both `overview_tab` and `overview_crosstab` into LaTeX code and/or directly into a .tex file.
 
 ## Contributing
 

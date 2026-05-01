@@ -5,6 +5,7 @@ import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import matplotlib.ticker
 import pandas as pd
+from datetime import date
 
 
 def _consecutive_segments(numbers: list) -> list[list]:
@@ -453,6 +454,52 @@ class Overview:
             show_plot=show_plot,
         )
 
+    def overview_latex(
+        self,
+        obj: pd.DataFrame,
+        title: str = "Time and scope of the sample",
+        id: str = "Sample",
+        time: str = "Time frame",
+        crosstab: bool = False,
+        cond1: str = "Condition 1",
+        cond2: str = "Condition 2",
+        save_out: bool = False,
+        file_path: str | None = None,
+        label: str = "tab:tab1",
+        fontsize: str | None = None,
+    ) -> str:
+        """Generate a LaTeX table from an overview_tab or overview_crosstab result.
+
+        Args:
+            obj: DataFrame returned by overview_tab or overview_crosstab (must have exactly 2 columns).
+            title: Caption of the table.
+            id: Header for the left column (ignored when crosstab=True).
+            time: Header for the right column (ignored when crosstab=True).
+            crosstab: If True, renders a cross-tabulation layout (obj must have exactly 2 rows).
+            cond1: Label for the first condition (used when crosstab=True).
+            cond2: Label for the second condition (used when crosstab=True).
+            save_out: If True, write the LaTeX to file_path instead of printing.
+            file_path: Destination .tex file path (required when save_out=True).
+            label: LaTeX label for the table (e.g. "tab:tab1").
+            fontsize: LaTeX font-size command without backslash (e.g. "small", "scriptsize").
+
+        Returns:
+            str: The generated LaTeX string.
+        """
+        return overview_latex(
+            obj,
+            title=title,
+            id=id,
+            time=time,
+            crosstab=crosstab,
+            cond1=cond1,
+            cond2=cond2,
+            save_out=save_out,
+            file_path=file_path,
+            label=label,
+            fontsize=fontsize,
+        )
+
 
 def overview_crossplot(
     df: pd.DataFrame,
@@ -643,3 +690,117 @@ def overview_overlap(
     if show_plot:
         plt.show()
     return ax
+
+
+def overview_latex(
+    obj: pd.DataFrame,
+    title: str = "Time and scope of the sample",
+    id: str = "Sample",
+    time: str = "Time frame",
+    crosstab: bool = False,
+    cond1: str = "Condition 1",
+    cond2: str = "Condition 2",
+    save_out: bool = False,
+    file_path: str | None = None,
+    label: str = "tab:tab1",
+    fontsize: str | None = None,
+) -> str:
+    """Generate a LaTeX table from an overview_tab or overview_crosstab result.
+
+    Args:
+        obj: DataFrame returned by overview_tab or overview_crosstab (must have exactly 2 columns).
+        title: Caption of the table.
+        id: Header for the left column (ignored when crosstab=True).
+        time: Header for the right column (ignored when crosstab=True).
+        crosstab: If True, renders a cross-tabulation layout (obj must have exactly 2 rows).
+        cond1: Label for the first condition (used when crosstab=True).
+        cond2: Label for the second condition (used when crosstab=True).
+        save_out: If True, write the LaTeX to file_path instead of printing.
+        file_path: Destination .tex file path (required when save_out=True).
+        label: LaTeX label for the table (e.g. "tab:tab1").
+        fontsize: LaTeX font-size command without backslash (e.g. "small", "scriptsize").
+
+    Returns:
+        str: The generated LaTeX string.
+
+    Raises:
+        ValueError: If obj does not have exactly 2 columns, crosstab=True and obj does not have
+            exactly 2 rows, or save_out=True without file_path.
+    """
+    if save_out and file_path is None:
+        raise ValueError("file_path must be provided when save_out=True.")
+
+    mat = obj.values
+
+    if mat.shape[1] != 2:
+        raise ValueError(
+            "Data frame requires two columns that represent the time and scope "
+            "dimension of the data. An overview_tab or overview_crosstab object is required."
+        )
+
+    if crosstab and mat.shape[0] != 2:
+        raise ValueError(
+            "A crosstab object must have exactly 2 rows (one per condition outcome)."
+        )
+
+    if not crosstab and mat.shape[0] == 2:
+        warnings.warn(
+            "Are you sure you want a table for time and scope conditions? "
+            "For a crosstab, set crosstab=True.",
+            UserWarning,
+            stacklevel=2,
+        )
+
+    fontsize_mod = f"\\{fontsize}\n" if fontsize else ""
+    today = date.today().isoformat()
+
+    if not crosstab:
+        output = (
+            f"% Overview table generated in Python using overviewpy\n"
+            f"% Table created on {today}\n"
+            f"\\begin{{table}}[ht]\n"
+            f" \\centering\n"
+            f" \\caption{{{title}}}\n"
+            f"\\label{{{label}}}\n"
+            f"{fontsize_mod}"
+            f"\\begin{{tabular}}{{ll}}\n"
+            f" \\hline\n"
+            f"{id} & {time} \\\\ \\hline\n"
+        )
+        output += "".join(f"{row[0]} & {row[1]} \\\\\n" for row in mat)
+        output += "\\hline\n \\end{tabular}\n \\end{table}\n"
+    else:
+        output = (
+            f"% Overview table generated in Python using overviewpy\n"
+            f"% Table created on {today}\n"
+            f"% Please add the following packages to your document preamble:\n"
+            f"% \\usepackage{{multirow}}\n"
+            f"% \\usepackage{{tabularx}}\n"
+            f"% \\newcolumntype{{b}}{{X}}\n"
+            f"% \\newcolumntype{{s}}{{>{{\\hsize=.5\\hsize}}X}}\n"
+            f"\\begin{{table}}[ht]\n"
+            f"\\caption{{{title}}}\n"
+            f"\\label{{{label}}}\n"
+            f"{fontsize_mod}"
+            f"\\begin{{tabularx}}{{\\textwidth}}{{ssbb}}\n"
+            f"\\hline & & \\multicolumn{{2}}{{c}}{{\\textbf{{{cond1}}}}} \\\\\n"
+            f" & & \\textbf{{Fulfilled}} & \\textbf{{Not fulfilled}} \\\\\n"
+            f" \\hline \\\\\n"
+            f" \\multirow{{2}}{{*}}{{\\textbf{{{cond2}}}}}"
+            f" & \\textbf{{Fulfilled}} &\n"
+            f"{mat[0, 0]} & {mat[0, 1]}\\\\\n"
+            f" \\\\ \\hline \\\\\n"
+            f" & \\textbf{{Not fulfilled}} & "
+            f"{mat[1, 0]} & {mat[1, 1]}\\\\\n"
+            f"\\hline \\\\\n"
+            f" \\end{{tabularx}}\n"
+            f" \\end{{table}}\n"
+        )
+
+    if save_out:
+        with open(file_path, "w") as f:
+            f.write(output)
+    else:
+        print(output)
+
+    return output
