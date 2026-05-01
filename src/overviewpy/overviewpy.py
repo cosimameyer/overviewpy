@@ -91,6 +91,62 @@ class Overview:
             })
         return pd.DataFrame(rows).set_index('column')
 
+
+    def overview_crosstab(
+        self,
+        cond1: str,
+        cond2: str,
+        threshold1: float,
+        threshold2: float,
+    ) -> pd.DataFrame:
+        """Sorts a dataset conditionally into a 2x2 cross table based on two conditions.
+
+        If duplicate (id, time) pairs exist, conditions are aggregated using the mean.
+
+        Args:
+            cond1: Column name for the first condition.
+            cond2: Column name for the second condition.
+            threshold1: Threshold for cond1.
+            threshold2: Threshold for cond2.
+
+        Returns:
+            pd.DataFrame: 2x2 DataFrame where each cell lists id (time_frame) entries.
+        """
+        df = self.df.dropna(subset=[self.id]).copy()
+        if len(df) != len(self.df):
+            print("There is a missing value in your id variable. The missing value is automatically deleted.")
+
+        if len(df[[self.id, self.time]].drop_duplicates()) != len(df):
+            df = (
+                df.groupby([self.id, self.time])[[cond1, cond2]]
+                .mean()
+                .reset_index()
+            )
+
+        df["_c1"] = (df[cond1] >= threshold1).astype(int)
+        df["_c2"] = (df[cond2] >= threshold2).astype(int)
+
+        quadrants = {
+            "part1": df[(df["_c1"] == 1) & (df["_c2"] == 1)][[self.id, self.time]],
+            "part2": df[(df["_c1"] == 0) & (df["_c2"] == 1)][[self.id, self.time]],
+            "part3": df[(df["_c1"] == 1) & (df["_c2"] == 0)][[self.id, self.time]],
+            "part4": df[(df["_c1"] == 0) & (df["_c2"] == 0)][[self.id, self.time]],
+        }
+
+        def _fmt(qdf: pd.DataFrame) -> str:
+            if qdf.empty:
+                return ""
+            tab = Overview(qdf.reset_index(drop=True), self.id, self.time).overview_tab()
+            return ", ".join(f"{row[self.id]} ({row['time_frame']})" for _, row in tab.iterrows())
+
+        parts = {k: _fmt(v) for k, v in quadrants.items()}
+
+        return pd.DataFrame(
+            [[parts["part1"], parts["part2"]], [parts["part3"], parts["part4"]]],
+            columns=[f"{cond1} >= {threshold1}", f"{cond1} < {threshold1}"],
+            index=[f"{cond2} >= {threshold2}", f"{cond2} < {threshold2}"],
+        )
+
     def overview_markdown(
         self,
         title: str = "Time and scope of the sample",
@@ -563,6 +619,19 @@ def overview_crossplot(
 def overview_tab(df: pd.DataFrame, id: str, time: int) -> pd.DataFrame:
     """Backward-compatible accessor for Overview.overview_tab. Deprecated since 0.2.0."""
     return Overview(df, id, time).overview_tab()
+
+
+def overview_crosstab(
+    df: pd.DataFrame,
+    id: str,
+    time: str,
+    cond1: str,
+    cond2: str,
+    threshold1: float,
+    threshold2: float,
+) -> pd.DataFrame:
+    """Backward-compatible accessor for Overview.overview_crosstab. Deprecated since 0.2.0."""
+    return Overview(df, id, time).overview_crosstab(cond1, cond2, threshold1, threshold2)
 
 
 def overview_na(
