@@ -48,6 +48,10 @@ overview = Overview(df=df, id='id', time='year')
 df_overview = overview.overview_tab()
 ```
 
+The output is a data frame with one row per id and a `time_frame` column that compresses consecutive years into ranges (e.g. `2021-2023`) and non-consecutive years as a comma-separated list (e.g. `2015, 2019`):
+
+![overview_tab output](docs/img/overview_tab.png)
+
 If your data contains missing values in `id` or `year`, they are silently
 removed and you will see a warning — no extra preprocessing needed:
 
@@ -68,12 +72,12 @@ df_overview = overview.overview_tab()
 
 #### `overview_na`
 
-`overview_na` visualises missing values in your data. It returns a 
-horizontal bar plot showing the amount of missing data (NAs) for each variable, 
-sorted from most to least missing. By default it shows absolute counts; 
-pass `relative=True` to display percentages instead.
-You can also augment the
-original data frame with the computed NA counts and percentages.
+`overview_na` visualises missing values in your data. It returns a
+horizontal bar plot showing the amount of missing data (NAs) for each variable,
+sorted from most to least missing. By default it shows percentages (`perc=True`);
+pass `perc=False` to display absolute counts instead. Switch to `row_wise=True`
+for a per-observation view, or set `add=True` to append the NA statistics
+directly to your data frame.
 
 ```python
 from overviewpy.overviewpy import Overview
@@ -128,7 +132,9 @@ overview = Overview(df=df, id=None, time=None)
 overview.overview_summary()
 ```
 
-This returns a data frame with one row per column containing `non_null_count`, `unique_count`, and `sample_values`.
+This returns a data frame with one row per column containing `non_null_count`, `unique_count`, and `sample_values`:
+
+![overview_summary output](docs/img/overview_summary.png)
 
 #### `overview_plot`
 
@@ -149,10 +155,18 @@ data = {
 df = pd.DataFrame(data)
 
 overview_plot(df, id='id', time='year')
+```
 
+![overview_plot output](docs/img/overview_plot.png)
+
+You can color-code the points by a third variable using the `color` parameter:
+
+```python
 # color-code points by a third variable
 overview_plot(df, id='id', time='year', color='regime')
 ```
+
+![overview_plot output with color](docs/img/overview_plot_color.png)
 
 ##### Command line
 
