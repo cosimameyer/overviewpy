@@ -21,6 +21,7 @@ The goal of `overviewpy` is to make it easy to get an overview of a data set by 
 - `overview_na` plots an overview of missing values by variable (both by row and by column)
 - `overview_summary` returns a per-column summary of any data frame (non-null count, unique count, sample values)
 - `overview_plot` visualizes observation presence across id and time as a connected dot-plot
+- `overview_overlap` plots comparison plots (bar chart or Venn diagram) to compare the ID coverage of two data frames
 
 #### `overview_tab`
 
@@ -168,6 +169,31 @@ overview_plot(df, id='id', time='year', color='regime')
 
 ![overview_plot output with color](docs/img/overview_plot_color.png)
 
+#### `overview_overlap`
+
+`overview_overlap` compares two data frames by visualizing how much their ID columns overlap. Use `plot_type="bar"` (default) for a grouped bar chart showing observation counts per identifier, or `plot_type="venn"` for a two-set Venn diagram.
+
+```python
+from overviewpy.overviewpy import Overview
+import pandas as pd
+
+data2 = {'id': ['RWA', 'GAB', 'GAB', 'ARG', 'ARG']}
+df2 = pd.DataFrame(data2)
+
+# Grouped bar chart (default)
+overview = Overview(df=df, id='id', time='year')
+overview.overview_overlap(dat2=df2, dat2_id='id', dat1_name='Survey 1', dat2_name='Survey 2')
+```
+
+![overview_overlap bar chart](docs/img/overview_overlap_bar.png)
+
+```python
+# Venn diagram
+overview.overview_overlap(dat2=df2, dat2_id='id', dat1_name='Survey 1', dat2_name='Survey 2', plot_type='venn')
+```
+
+![overview_overlap Venn diagram](docs/img/overview_overlap_venn.png)
+
 ##### Command line
 
 Alternatively, run the summarizer from the command line to generate an HTML report:
@@ -211,7 +237,6 @@ Below that frontmatter is a table listing, for each included column in the file:
 -   `overview_latex` converts the output of both `overview_tab` and `overview_crosstab` into LaTeX code and/or directly into a .tex file.
 -   `overview_crossplot` is an alternative to visualize a cross table (a way to present results from `overview_crosstab`)
 -   `overview_heat` plots a heat map of your time line
--   `overview_overlap` plots comparison plots (bar graph and Venn diagram) to compare to data frames
 
 ## Contributing
 
