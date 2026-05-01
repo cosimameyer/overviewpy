@@ -80,7 +80,7 @@ df_overview = overview.overview_tab()
 `overview_markdown` converts the output of `overview_tab` into a Markdown table. The result can be printed, copy-pasted into any Markdown document, or saved directly as a `.md` file.
 
 ```python
-from overviewpy.overviewpy import overview_markdown
+from overviewpy.overviewpy import Overview
 import pandas as pd
 
 data = {
@@ -92,7 +92,8 @@ data = {
 
 df = pd.DataFrame(data)
 
-print(overview_markdown(df=df, id='id', time='year'))
+overview = Overview(df=df, id='id', time='year')
+print(overview.overview_markdown())
 ```
 
 This produces:
@@ -112,13 +113,10 @@ This produces:
 You can customise the title and column headers, and optionally save to a file:
 
 ```python
-overview_markdown(
-    df=df,
-    id='id',
-    time='year',
+overview.overview_markdown(
     title="My sample",
-    id_label="Country",
-    time_label="Years covered",
+    id="Country",
+    time="Years covered",
     file_path="output/sample_overview.md",
 )
 ```
