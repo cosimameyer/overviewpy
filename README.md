@@ -23,6 +23,7 @@ The goal of `overviewpy` is to make it easy to get an overview of a data set by 
 - `overview_plot` visualizes observation presence across id and time as a connected dot-plot
 - `overview_overlap` plots comparison plots (bar chart or Venn diagram) to compare the ID coverage of two data frames
 - `overview_heat` plots a heat map of observation counts (or percentages) for each id-time combination
+- `overview_crossplot` plots a scatter of two conditions split by their thresholds, dividing observations into four quadrants
 
 #### `overview_tab`
 
@@ -216,6 +217,41 @@ overview.overview_heat(perc=True, exp_total=3)
 
 ![overview_heat percentage](docs/img/overview_heat_perc.png)
 
+#### `overview_crossplot`
+
+`overview_crossplot` visualises two conditions against user-defined thresholds. Each observation is placed at its mean `cond1`/`cond2` values after aggregating to unique (id, time) pairs. Vertical and horizontal threshold lines divide the plot into four quadrants.
+
+```python
+from overviewpy.overviewpy import Overview
+import pandas as pd
+
+data = {
+    'id': ['RWA', 'RWA', 'GAB', 'GAB', 'FRA'],
+    'year': [2020, 2021, 2020, 2021, 2020],
+    'gdp': [10000, 30000, 20000, 50000, 26000],
+    'population': [12000000, 13000000, 2000000, 2100000, 68000000],
+}
+
+df = pd.DataFrame(data)
+overview = Overview(df=df, id='id', time='year')
+
+# Basic plot
+overview.overview_crossplot(cond1='gdp', cond2='population',
+                            threshold1=25000, threshold2=27000000)
+```
+
+![overview_crossplot basic](docs/img/overview_crossplot.png)
+
+```python
+# With quadrant coloring and point labels
+overview.overview_crossplot(cond1='gdp', cond2='population',
+                            threshold1=25000, threshold2=27000000,
+                            color=True, label=True,
+                            xaxis="GDP per capita", yaxis="Population")
+```
+
+![overview_crossplot with color and labels](docs/img/overview_crossplot_color.png)
+
 ##### Command line
 
 Alternatively, run the summarizer from the command line to generate an HTML report:
@@ -257,7 +293,6 @@ Below that frontmatter is a table listing, for each included column in the file:
 
 -   `overview_crosstab` generates a cross table. The conditional column allows to disaggregate the overview table by specifying two conditions, hence resulting a 2x2 table. This way, it is easy to visualize the time and scope conditions as well as theoretical assumptions with examples from the data set.
 -   `overview_latex` converts the output of both `overview_tab` and `overview_crosstab` into LaTeX code and/or directly into a .tex file.
--   `overview_crossplot` is an alternative to visualize a cross table (a way to present results from `overview_crosstab`)
 
 ## Contributing
 
