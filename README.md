@@ -18,6 +18,7 @@ $ pip install overviewpy
 The goal of `overviewpy` is to make it easy to get an overview of a data set by displaying relevant sample information. At the moment, there are the following functions:
 
 - `overview_tab` generates a tabular overview of the sample (and returns a data frame). The general sample plots a two-column table that provides information on an id in the left column and a the time frame on the right column.
+- `overview_markdown` converts the output of `overview_tab` into a Markdown table that can be copy-pasted into any Markdown document or saved as a `.md` file.
 - `overview_na` plots an overview of missing values by variable (both by row and by column)
 - `overview_summary` returns a per-column summary of any data frame (non-null count, unique count, sample values)
 - `overview_plot` visualizes observation presence across id and time as a connected dot-plot
@@ -72,6 +73,52 @@ df_na = pd.DataFrame(data_with_na)
 # UserWarning: missing id and time values are dropped automatically
 overview = Overview(df=df_na, id='id', time='year')
 df_overview = overview.overview_tab()
+```
+
+#### `overview_markdown`
+
+`overview_markdown` converts the output of `overview_tab` into a Markdown table. The result can be printed, copy-pasted into any Markdown document, or saved directly as a `.md` file.
+
+```python
+from overviewpy.overviewpy import Overview
+import pandas as pd
+
+data = {
+       'id': ['RWA', 'RWA', 'RWA', 'GAB', 'GAB', 'FRA', \
+        'FRA', 'BEL', 'BEL', 'ARG'],
+       'year': [2022, 2023, 2021, 2023, 2020, 2019, 2015, \
+        2014, 2013, 2002]
+   }
+
+df = pd.DataFrame(data)
+
+overview = Overview(df=df, id='id', time='year')
+print(overview.overview_markdown())
+```
+
+This produces:
+
+```markdown
+## Time and scope of the sample
+
+| Sample | Time frame |
+|---|---|
+| ARG | 2002 |
+| BEL | 2013-2014 |
+| FRA | 2015, 2019 |
+| GAB | 2020, 2023 |
+| RWA | 2021-2023 |
+```
+
+You can customise the title and column headers, and optionally save to a file:
+
+```python
+overview.overview_markdown(
+    title="My sample",
+    id="Country",
+    time="Years covered",
+    file_path="output/sample_overview.md",
+)
 ```
 
 #### `overview_na`

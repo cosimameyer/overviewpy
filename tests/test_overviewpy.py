@@ -5,7 +5,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-from overviewpy.overviewpy import overview_tab, overview_na, overview_summary, overview_plot, overview_overlap, overview_heat, overview_crossplot, overview_latex
+from overviewpy.overviewpy import overview_tab, overview_na, overview_summary, overview_plot, overview_overlap, overview_heat, overview_crossplot, overview_latex, overview_markdown
 
 def test_overview_tab():
     """Tests output values and shape of overview_tab."""
@@ -254,6 +254,56 @@ def test_overview_crossplot_drops_na_id():
 
     offsets = ax.collections[0].get_offsets()
     assert len(offsets) == 1, "NaN id rows should be dropped"
+
+
+def test_overview_markdown():
+    """Tests structure and content of overview_markdown output."""
+    data = {
+        'id_column': ['RWA', 'RWA', 'GAB', 'GAB', 'FRA'],
+        'time': [2021, 2022, 2020, 2023, 2019],
+    }
+    df = pd.DataFrame(data)
+
+    result = overview_markdown(df, id='id_column', time='time')
+
+    assert result.startswith("## Time and scope of the sample"), "Should start with default title heading"
+    assert "| Sample | Time frame |" in result, "Should contain default column headers"
+    assert "|---|---|" in result, "Should contain separator row"
+    assert "| FRA | 2019 |" in result
+    assert "| GAB | 2020, 2023 |" in result
+    assert "| RWA | 2021-2022 |" in result
+
+
+def test_overview_markdown_custom_labels():
+    """Tests custom title and column labels."""
+    data = {'country': ['DEU', 'DEU'], 'year': [2000, 2001]}
+    df = pd.DataFrame(data)
+
+    result = overview_markdown(
+        df,
+        id='country',
+        time='year',
+        title="My sample",
+        id_label="Country",
+        time_label="Years",
+    )
+
+    assert result.startswith("## My sample")
+    assert "| Country | Years |" in result
+    assert "| DEU | 2000-2001 |" in result
+
+
+def test_overview_markdown_saves_file(tmp_path):
+    """Tests that file_path writes output to disk."""
+    data = {'id': ['ARG'], 'year': [2002]}
+    df = pd.DataFrame(data)
+    output_file = tmp_path / "output.md"
+
+    overview_markdown(df, id='id', time='year', file_path=str(output_file))
+
+    assert output_file.exists()
+    content = output_file.read_text()
+    assert "| ARG | 2002 |" in content
 
 
 def test_overview_summary():
