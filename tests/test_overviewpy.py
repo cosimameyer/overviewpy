@@ -55,21 +55,69 @@ def test_overview_tab_drops_na_in_id():
     assert any("id variable" in str(w.message) for w in caught)
 
 
-def test_overview_na():
-    """Test plotting of missing values."""
-    data_na = {
-        'id': ['RWA', 'RWA', 'RWA', np.nan, 'GAB', 'GAB', 'FRA', 'FRA', 'BEL', 'BEL', 'ARG', np.nan,  np.nan],
-        'year': [2022, 2001, 2000, 2023, 2021, 2023, 2020, 2019,  np.nan, 2015, 2014, 2013, 2002]
-    }
+def _make_na_df():
+    return pd.DataFrame({
+        'id': ['RWA', 'RWA', 'RWA', np.nan, 'GAB', 'GAB', 'FRA', 'FRA', 'BEL', 'BEL', 'ARG', np.nan, np.nan],
+        'year': [2022, 2001, 2000, 2023, 2021, 2023, 2020, 2019, np.nan, 2015, 2014, 2013, 2002],
+    })
 
-    df_na = pd.DataFrame(data_na)
 
-    # Grab the first container instance from the returned matplotlib.Axes object and run assertions on it.
+def test_overview_na_default():
+    """Column-wise percentage plot (default behaviour)."""
+    df_na = _make_na_df()
     fig = overview_na(df_na, show_plot=False).containers[0]
-    assert isinstance(fig, matplotlib.container.BarContainer), \
-           "Wrong plot type"
-    assert len(fig.datavalues) == len(df_na.columns), \
-        "Incorrect number of bars plotted"
+    assert isinstance(fig, matplotlib.container.BarContainer)
+    assert len(fig.datavalues) == len(df_na.columns)
+
+
+def test_overview_na_absolute():
+    """Column-wise absolute count plot."""
+    df_na = _make_na_df()
+    ax = overview_na(df_na, show_plot=False, perc=False)
+    assert ax.get_xlabel() == "Number of NA (total)"
+    assert len(ax.containers[0].datavalues) == len(df_na.columns)
+
+
+def test_overview_na_perc_xaxis():
+    """Column-wise percentage plot has correct x-axis label."""
+    df_na = _make_na_df()
+    ax = overview_na(df_na, show_plot=False, perc=True)
+    assert ax.get_xlabel() == "Number of NA (in %)"
+
+
+def test_overview_na_yaxis_label():
+    """Custom y-axis label is applied."""
+    df_na = _make_na_df()
+    ax = overview_na(df_na, show_plot=False, yaxis="My Variables")
+    assert ax.get_ylabel() == "My Variables"
+
+
+def test_overview_na_row_wise_plot():
+    """Row-wise plot has one bar per row and y-axis label 'Observations'."""
+    df_na = _make_na_df()
+    ax = overview_na(df_na, show_plot=False, row_wise=True)
+    assert ax.get_ylabel() == "Observations"
+    assert len(ax.containers[0].datavalues) == len(df_na)
+
+
+def test_overview_na_row_wise_absolute():
+    """Row-wise absolute plot has correct x-axis label."""
+    df_na = _make_na_df()
+    ax = overview_na(df_na, show_plot=False, row_wise=True, perc=False)
+    assert ax.get_xlabel() == "Number of NA (total)"
+
+
+def test_overview_na_add():
+    """add=True returns original DataFrame extended with na_count and percentage."""
+    df_na = _make_na_df()
+    result = overview_na(df_na, row_wise=True, add=True)
+    assert isinstance(result, pd.DataFrame)
+    assert "na_count" in result.columns
+    assert "percentage" in result.columns
+    assert len(result) == len(df_na)
+    # row 3 (index 3): id=NaN, year=2023 → 1 NA out of 2 columns → 50 %
+    assert result["na_count"].iloc[3] == 1
+    assert result["percentage"].iloc[3] == 50.0
 
 
 def test_overview_summary():

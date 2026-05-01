@@ -92,23 +92,72 @@ class Overview:
             })
         return pd.DataFrame(rows).set_index('column')
 
-    def overview_na(self, show_plot: bool = True) -> matplotlib.axes.Axes:
-        """Plots an overview of missing values by variable.
+    def overview_na(
+        self,
+        show_plot: bool = True,
+        yaxis: str = "Variables",
+        perc: bool = True,
+        row_wise: bool = False,
+        add: bool = False,
+    ) -> matplotlib.axes.Axes | pd.DataFrame:
+        """Plots an overview of missing values or augments the data frame with NA counts.
 
         Args:
             show_plot: Whether to display the plot. Defaults to True.
+            yaxis: Y-axis label. Defaults to "Variables". Overridden to "Observations" when row_wise=True.
+            perc: If True (default), plot shows percentage of NAs; if False, shows absolute counts.
+            row_wise: If True, calculates NAs per row instead of per column. Defaults to False.
+            add: If True (only used with row_wise=True), returns the original data frame with
+                na_count and percentage columns appended instead of a plot. Defaults to False.
 
         Returns:
-            matplotlib.axes.Axes: Bar plot of missing value counts per column.
+            matplotlib.axes.Axes when a plot is produced, or pd.DataFrame when add=True.
         """
-        ax = self.df.isna().sum().plot(kind="barh")
-        ax.set_xlabel("Count")
-        ax.set_ylabel("Columns")
-        plt.title("Missing Values Overview")
+        if row_wise:
+            yaxis = "Observations"
+            na_count = self.df.isna().sum(axis=1)
+            total = len(self.df.columns)
+            if add:
+                return self.df.assign(
+                    na_count=na_count.values,
+                    percentage=na_count.values / total * 100,
+                )
+            result = pd.DataFrame({
+                "variable": range(1, len(self.df) + 1),
+                "na_count": na_count.values,
+                "percentage": na_count.values / total * 100,
+            })
+        else:
+            na_count = self.df.isna().sum()
+            total = len(self.df)
+            result = pd.DataFrame({
+                "variable": na_count.index,
+                "na_count": na_count.values,
+                "percentage": na_count.values / total * 100,
+            })
 
+        x = "percentage" if perc else "na_count"
+        xaxis = "Number of NA (in %)" if perc else "Number of NA (total)"
+        return self._plot_na(result, x=x, yaxis=yaxis, xaxis=xaxis, show_plot=show_plot)
+
+    def _plot_na(
+        self,
+        result: pd.DataFrame,
+        x: str,
+        yaxis: str,
+        xaxis: str,
+        show_plot: bool,
+    ) -> matplotlib.axes.Axes:
+        sorted_result = result.sort_values(x, ascending=True)
+        fig, ax = plt.subplots()
+        ax.barh(sorted_result["variable"].astype(str), sorted_result[x])
+        ax.set_xlabel(xaxis)
+        ax.set_ylabel(yaxis)
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        ax.tick_params(left=False, bottom=False)
         if show_plot:
             plt.show()
-
         return ax
 
 
@@ -117,9 +166,18 @@ def overview_tab(df: pd.DataFrame, id: str, time: int) -> pd.DataFrame:
     return Overview(df, id, time).overview_tab()
 
 
-def overview_na(df: pd.DataFrame, show_plot: bool = True) -> matplotlib.axes.Axes:
+def overview_na(
+    df: pd.DataFrame,
+    show_plot: bool = True,
+    yaxis: str = "Variables",
+    perc: bool = True,
+    row_wise: bool = False,
+    add: bool = False,
+) -> matplotlib.axes.Axes | pd.DataFrame:
     """Backward-compatible accessor for Overview.overview_na. Deprecated since 0.2.0."""
-    return Overview(df, None, None).overview_na(show_plot)
+    return Overview(df, None, None).overview_na(
+        show_plot=show_plot, yaxis=yaxis, perc=perc, row_wise=row_wise, add=add
+    )
 
 
 def overview_summary(df: pd.DataFrame) -> pd.DataFrame:
