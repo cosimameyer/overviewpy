@@ -5,7 +5,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-from overviewpy.overviewpy import overview_tab, overview_na, overview_summary, overview_plot, overview_overlap, overview_heat, overview_crossplot, overview_latex, overview_markdown
+from overviewpy.overviewpy import overview_tab, overview_na, overview_summary, overview_plot, overview_overlap, overview_heat, overview_crossplot, overview_latex, overview_markdown, overview_crosstab, Overview
 
 def test_overview_tab():
     """Tests output values and shape of overview_tab."""
@@ -641,3 +641,58 @@ def test_overview_latex_crosstab_structure():
     assert "Population" in result
     assert "Fulfilled" in result
     assert "Not fulfilled" in result
+
+def test_overview_crosstab_shape():
+    """overview_crosstab returns a 2x2 DataFrame."""
+    data = {
+        'country': ['RWA', 'GAB', 'FRA', 'BEL', 'ARG'],
+        'year':    [2020,   2020,  2020,  2020,  2020],
+        'gdp':     [30000, 20000, 35000, 15000, 28000],
+        'pop':     [28000, 30000, 25000, 32000, 26000],
+    }
+    df = pd.DataFrame(data)
+    result = overview_crosstab(df, 'country', 'year', 'gdp', 'pop', 25000, 27000)
+    assert result.shape == (2, 2), "Result must be a 2x2 DataFrame"
+
+
+def test_overview_crosstab_oop():
+    """Overview.overview_crosstab and standalone function return identical results."""
+    data = {
+        'country': ['RWA', 'GAB', 'FRA', 'BEL', 'ARG'],
+        'year':    [2020,   2020,  2020,  2020,  2020],
+        'gdp':     [30000, 20000, 35000, 15000, 28000],
+        'pop':     [28000, 30000, 25000, 32000, 26000],
+    }
+    df = pd.DataFrame(data)
+    oop_result = Overview(df, 'country', 'year').overview_crosstab('gdp', 'pop', 25000, 27000)
+    fn_result  = overview_crosstab(df, 'country', 'year', 'gdp', 'pop', 25000, 27000)
+    assert oop_result.equals(fn_result)
+
+
+def test_overview_crosstab_quadrant_content():
+    """Entries land in the correct quadrant cell."""
+    data = {
+        'country': ['RWA', 'GAB'],
+        'year':    [2020,   2020],
+        'gdp':     [30000, 20000],
+        'pop':     [28000, 30000],
+    }
+    df = pd.DataFrame(data)
+    result = overview_crosstab(df, 'country', 'year', 'gdp', 'pop', 25000, 27000)
+    # RWA: gdp>=25000 (c1=1), pop>=27000 (c2=1) → part1 (row0, col0)
+    assert 'RWA' in result.iloc[0, 0]
+    # GAB: gdp<25000 (c1=0), pop>=27000 (c2=1) → part2 (row0, col1)
+    assert 'GAB' in result.iloc[0, 1]
+
+
+def test_overview_crosstab_aggregates_duplicates():
+    """Duplicate (id, time) rows are aggregated by mean before thresholding."""
+    data = {
+        'country': ['RWA', 'RWA'],
+        'year':    [2020,   2020],
+        'gdp':     [20000, 30000],  # mean = 25000 → c1=1 at threshold 25000
+        'pop':     [28000, 28000],  # mean = 28000 → c2=1 at threshold 27000
+    }
+    df = pd.DataFrame(data)
+    result = overview_crosstab(df, 'country', 'year', 'gdp', 'pop', 25000, 27000)
+    assert 'RWA' in result.iloc[0, 0], "Aggregated RWA should land in part1"
