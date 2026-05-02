@@ -1,3 +1,4 @@
+import logging
 import warnings
 import matplotlib
 import matplotlib.colors
@@ -6,6 +7,8 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker
 import pandas as pd
 from datetime import date
+
+logger = logging.getLogger(__name__)
 
 
 def _consecutive_segments(numbers: list) -> list[list]:
@@ -41,6 +44,7 @@ class Overview:
             pd.DataFrame: Two-column frame with id and time_frame columns, one
             row per unique id.
         """
+        logger.debug('overview_tab: %d rows, id_col=%r, time=%r', len(self.df), self.id_col, self.time)
         df_no_id_na = self.df.dropna(subset=[self.id_col]).copy()
         if len(df_no_id_na) != len(self.df):
             warnings.warn(
@@ -80,6 +84,7 @@ class Overview:
         Returns:
             pd.DataFrame: One row per column with non_null_count, unique_count, and sample_values.
         """
+        logger.debug('overview_summary: %d columns', len(self.df.columns))
         rows = []
         for col in self.df.columns:
             non_null = self.df[col].dropna()
@@ -111,6 +116,7 @@ class Overview:
         Returns:
             pd.DataFrame: 2x2 DataFrame where each cell lists id (time_frame) entries.
         """
+        logger.debug('overview_crosstab: cond1=%r (>=%s), cond2=%r (>=%s)', cond1, threshold1, cond2, threshold2)
         df = self.df.dropna(subset=[self.id_col]).copy()
         if len(df) != len(self.df):
             warnings.warn(
@@ -183,6 +189,7 @@ class Overview:
         if file_path is not None:
             with open(file_path, "w") as f:
                 f.write(output)
+            logger.info('Markdown table written to %s', file_path)
 
         return output
 
@@ -228,6 +235,7 @@ class Overview:
             .mean()
             .reset_index()
         )
+        logger.debug('overview_crossplot: %d aggregated (id, time) points', len(agg))
         agg["_grp"] = (
             (agg[cond1] >= threshold1).astype(int) * 2
             + (agg[cond2] >= threshold2).astype(int)
@@ -288,6 +296,7 @@ class Overview:
         if perc and exp_total is None:
             raise ValueError("exp_total must be provided when perc=True.")
 
+        logger.debug('overview_heat: perc=%s, exp_total=%s', perc, exp_total)
         counts = (
             self.df.groupby([self.id_col, self.time])
             .size()
@@ -352,6 +361,7 @@ class Overview:
         Returns:
             matplotlib.axes.Axes when a plot is produced, or pd.DataFrame when add=True.
         """
+        logger.debug('overview_na: row_wise=%s, perc=%s', row_wise, perc)
         if row_wise:
             yaxis = "Observations"
             na_count = self.df.isna().sum(axis=1)
@@ -439,6 +449,7 @@ class Overview:
         )
 
         ids_sorted = sorted(dat_red[self.id_col].unique(), key=str)
+        logger.debug('overview_plot: %d unique ids', len(ids_sorted))
 
         if color is not None:
             color_vals = sorted(dat_red[color].dropna().unique(), key=str)
@@ -542,6 +553,10 @@ class Overview:
         if plot_type not in ("bar", "venn"):
             raise ValueError(f"plot_type must be 'bar' or 'venn', got {plot_type!r}")
 
+        set1 = set(self.df[self.id_col].dropna())
+        set2 = set(dat2[dat2_id].dropna())
+        logger.debug('overview_overlap: %d vs %d unique ids, plot_type=%r', len(set1), len(set2), plot_type)
+
         if plot_type == "bar":
             counts1 = self.df[self.id_col].value_counts().rename(dat1_name)
             counts2 = dat2[dat2_id].value_counts().rename(dat2_name)
@@ -557,8 +572,6 @@ class Overview:
                 plt.show()
             return ax
 
-        set1 = set(self.df[self.id_col].dropna())
-        set2 = set(dat2[dat2_id].dropna())
         only1 = len(set1 - set2)
         only2 = len(set2 - set1)
         both = len(set1 & set2)
@@ -891,5 +904,6 @@ def overview_latex(
     if save_out:
         with open(file_path, "w") as f:
             f.write(output)
+        logger.info('LaTeX table written to %s', file_path)
 
     return output
