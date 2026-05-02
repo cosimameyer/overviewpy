@@ -4,10 +4,13 @@ Provides a command line interface to access the summarizer library for data file
 """
 
 import argparse
+import logging
 import os
 import pathlib
-from overviewpy.datafilesummarizer.renderers.JinjaRenderer import JinjaRenderer
-from overviewpy.datafilesummarizer.Summarizer import Summarizer
+
+logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+from overviewpy.summarizer.renderer import JinjaRenderer
+from overviewpy.summarizer.summarizer import Summarizer
 
 
 def _parse_args() -> argparse.Namespace:
@@ -62,7 +65,7 @@ if output_type == 'file':
     with open(outfile_name, 'w') as outfile:
         outfile.write(JinjaRenderer.render(summary))
 
-    print(f"Output written to {outfile_name}")
+    logging.info('Output written to %s', outfile_name)
     os.system(f"open {outfile_name}")
 else:
     print(summary)
