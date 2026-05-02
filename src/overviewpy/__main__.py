@@ -9,8 +9,8 @@ import os
 import pathlib
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
-from overviewpy.datafilesummarizer.renderers.JinjaRenderer import JinjaRenderer
-from overviewpy.datafilesummarizer.Summarizer import Summarizer
+from overviewpy.summarizer.renderer import JinjaRenderer
+from overviewpy.summarizer.summarizer import Summarizer
 
 
 def _parse_args() -> argparse.Namespace:

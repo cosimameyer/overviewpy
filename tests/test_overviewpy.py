@@ -5,7 +5,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-from overviewpy.overviewpy import overview_tab, overview_na, overview_summary, overview_plot, overview_overlap, overview_heat, overview_crossplot, overview_latex, overview_markdown, overview_crosstab, Overview
+from overviewpy.overview import overview_tab, overview_na, overview_summary, overview_plot, overview_overlap, overview_heat, overview_crossplot, overview_latex, overview_markdown, overview_crosstab, Overview
 
 def test_overview_tab():
     """Tests output values and shape of overview_tab."""

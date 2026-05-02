@@ -1,3 +1,3 @@
 # Reference
 
-::: overviewpy.overviewpy
+::: overviewpy.overview

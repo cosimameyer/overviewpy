@@ -38,7 +38,7 @@ Rows with missing values in either the `id` or `time` column are automatically
 dropped and a `UserWarning` is raised for each affected variable.
 
 ```python
-from overviewpy.overviewpy import Overview
+from overviewpy.overview import Overview
 import pandas as pd
 
 data = {
@@ -81,7 +81,7 @@ df_overview = overview.overview_tab()
 `overview_markdown` converts the output of `overview_tab` into a Markdown table. The result can be printed, copy-pasted into any Markdown document, or saved directly as a `.md` file.
 
 ```python
-from overviewpy.overviewpy import Overview
+from overviewpy.overview import Overview
 import pandas as pd
 
 data = {
@@ -132,7 +132,7 @@ for a per-observation view, or set `add=True` to append the NA statistics
 directly to your data frame.
 
 ```python
-from overviewpy.overviewpy import Overview
+from overviewpy.overview import Overview
 import pandas as pd
 import numpy as np
 
@@ -176,7 +176,7 @@ Row-wise output:
 Use `overview_summary` to get a quick structured overview of any data frame:
 
 ```python
-from overviewpy.overviewpy import Overview
+from overviewpy.overview import Overview
 import pandas as pd
 
 df = pd.read_csv("mydata.csv")
@@ -196,7 +196,7 @@ periods are connected by a line; gaps in coverage produce separate disconnected
 clusters. Optionally color-code points by a third variable.
 
 ```python
-from overviewpy.overviewpy import Overview
+from overviewpy.overview import Overview
 import pandas as pd
 
 data = {
@@ -226,7 +226,7 @@ overview.overview_plot(color='regime')
 `overview_overlap` compares two data frames by visualizing how much their ID columns overlap. Use `plot_type="bar"` (default) for a grouped bar chart showing observation counts per identifier, or `plot_type="venn"` for a two-set Venn diagram.
 
 ```python
-from overviewpy.overviewpy import Overview
+from overviewpy.overview import Overview
 import pandas as pd
 
 data2 = {'id': ['RWA', 'GAB', 'GAB', 'ARG', 'ARG']}
@@ -251,7 +251,7 @@ overview.overview_overlap(dat2=df2, dat2_id='id', dat1_name='Survey 1', dat2_nam
 `overview_heat` plots a heat map that shows how many observations exist for each id-time combination. Set `perc=True` together with `exp_total` to display coverage as a percentage of the expected maximum.
 
 ```python
-from overviewpy.overviewpy import Overview
+from overviewpy.overview import Overview
 import pandas as pd
 
 overview = Overview(df=df, id_col='id', time='year')
@@ -272,7 +272,7 @@ overview.overview_heat(perc=True, exp_total=3)
 `overview_crossplot` visualises two conditions against user-defined thresholds. Each observation is placed at its mean `cond1`/`cond2` values after aggregating to unique (id, time) pairs. Vertical and horizontal threshold lines divide the plot into four quadrants.
 
 ```python
-from overviewpy.overviewpy import Overview
+from overviewpy.overview import Overview
 import pandas as pd
 
 data = {
@@ -307,7 +307,7 @@ overview.overview_crossplot(cond1='gdp', cond2='population',
 Use `overview_latex` to export the result of `overview_tab` as a LaTeX table:
 
 ```python
-from overviewpy.overviewpy import Overview
+from overviewpy.overview import Overview
 import pandas as pd
 
 data = {
@@ -333,7 +333,7 @@ ovw.overview_latex(df_overview, save_out=True, file_path="output.tex")
 `overview_crosstab` sorts a dataset into a 2×2 cross table based on two numeric conditions and their thresholds. Each cell lists the id–time entries that fall into that quadrant.
 
 ```python
-from overviewpy.overviewpy import Overview
+from overviewpy.overview import Overview
 import pandas as pd
 
 data = {
