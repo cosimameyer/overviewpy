@@ -264,7 +264,7 @@ def test_overview_markdown():
     }
     df = pd.DataFrame(data)
 
-    result = overview_markdown(df, id='id_column', time='time')
+    result = overview_markdown(df, id_col='id_column', time='time')
 
     assert result.startswith("## Time and scope of the sample"), "Should start with default title heading"
     assert "| Sample | Time frame |" in result, "Should contain default column headers"
@@ -281,7 +281,7 @@ def test_overview_markdown_custom_labels():
 
     result = overview_markdown(
         df,
-        id='country',
+        id_col='country',
         time='year',
         title="My sample",
         id_label="Country",
@@ -299,7 +299,7 @@ def test_overview_markdown_saves_file(tmp_path):
     df = pd.DataFrame(data)
     output_file = tmp_path / "output.md"
 
-    overview_markdown(df, id='id', time='year', file_path=str(output_file))
+    overview_markdown(df, id_col='id', time='year', file_path=str(output_file))
 
     assert output_file.exists()
     content = output_file.read_text()
@@ -330,7 +330,7 @@ def test_overview_plot_returns_axes():
         'year': [2020, 2021, 2022, 2020, 2021, 2019],
     }
     df = pd.DataFrame(data)
-    ax = overview_plot(df, id='id', time='year', show_plot=False)
+    ax = overview_plot(df, id_col='id', time='year', show_plot=False)
     assert isinstance(ax, matplotlib.axes.Axes)
     plt.close("all")
 
@@ -342,7 +342,7 @@ def test_overview_plot_axis_labels():
         'year': [2020, 2021],
     }
     df = pd.DataFrame(data)
-    ax = overview_plot(df, id='id', time='year', xaxis="Year", yaxis="Country", show_plot=False)
+    ax = overview_plot(df, id_col='id', time='year', xaxis="Year", yaxis="Country", show_plot=False)
     assert ax.get_xlabel() == "Year"
     assert ax.get_ylabel() == "Country"
     plt.close("all")
@@ -355,7 +355,7 @@ def test_overview_plot_drops_na():
         'year': [2020, 2021, np.nan, 2022],
     }
     df = pd.DataFrame(data)
-    ax = overview_plot(df, id='id', time='year', show_plot=False)
+    ax = overview_plot(df, id_col='id', time='year', show_plot=False)
     # Only 'RWA' (year=2020) and 'FRA' (year=2022) have valid id+time; 'GAB' has NaN time
     ytick_labels = [t.get_text() for t in ax.get_yticklabels()]
     assert 'RWA' in ytick_labels
@@ -372,7 +372,7 @@ def test_overview_plot_with_color():
         'regime': ['democracy', 'democracy', 'autocracy', 'autocracy'],
     }
     df = pd.DataFrame(data)
-    ax = overview_plot(df, id='id', time='year', color='regime', show_plot=False)
+    ax = overview_plot(df, id_col='id', time='year', color='regime', show_plot=False)
     assert isinstance(ax, matplotlib.axes.Axes)
     # Legend should be present
     assert ax.get_legend() is not None
@@ -387,8 +387,8 @@ def test_overview_plot_asc_order():
     }
     df = pd.DataFrame(data)
 
-    ax_asc = overview_plot(df, id='id', time='year', asc=True, show_plot=False)
-    ax_desc = overview_plot(df, id='id', time='year', asc=False, show_plot=False)
+    ax_asc = overview_plot(df, id_col='id', time='year', asc=True, show_plot=False)
+    ax_desc = overview_plot(df, id_col='id', time='year', asc=False, show_plot=False)
 
     assert ax_asc.yaxis_inverted() != ax_desc.yaxis_inverted()
     plt.close("all")
@@ -401,7 +401,7 @@ def test_overview_plot_consecutive_segments():
         'year': [2000, 2001, 2005, 2006],  # gap between 2001 and 2005
     }
     df = pd.DataFrame(data)
-    ax = overview_plot(df, id='id', time='year', show_plot=False)
+    ax = overview_plot(df, id_col='id', time='year', show_plot=False)
     # Two consecutive segments → two scatter PathCollections and two Line2D segments
     scatter_collections = [c for c in ax.collections if hasattr(c, 'get_offsets')]
     assert len(scatter_collections) == 2, "Expected 2 scatter segments for a gap in time"
@@ -568,7 +568,7 @@ def test_overview_latex_default_headers(tab_df):
 
 
 def test_overview_latex_custom_headers(tab_df):
-    result = overview_latex(tab_df, id="Country", time="Years")
+    result = overview_latex(tab_df, id_label="Country", time_label="Years")
     assert "Country & Years" in result
 
 

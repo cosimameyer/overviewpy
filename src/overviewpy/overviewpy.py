@@ -1,3 +1,4 @@
+import logging
 import warnings
 import matplotlib
 import matplotlib.colors
@@ -6,6 +7,8 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker
 import pandas as pd
 from datetime import date
+
+logger = logging.getLogger(__name__)
 
 
 def _consecutive_segments(numbers: list) -> list[list]:
@@ -25,9 +28,9 @@ def _consecutive_segments(numbers: list) -> list[list]:
 
 
 class Overview:
-    def __init__(self, df: pd.DataFrame, id: str | None, time: str | None):
+    def __init__(self, df: pd.DataFrame, id_col: str | None, time: str | None):
         self.df = df
-        self.id = id
+        self.id_col = id_col
         self.time = time
 
     def overview_tab(self) -> pd.DataFrame:
@@ -41,7 +44,8 @@ class Overview:
             pd.DataFrame: Two-column frame with id and time_frame columns, one
             row per unique id.
         """
-        df_no_id_na = self.df.dropna(subset=[self.id]).copy()
+        logger.debug('overview_tab: %d rows, id_col=%r, time=%r', len(self.df), self.id_col, self.time)
+        df_no_id_na = self.df.dropna(subset=[self.id_col]).copy()
         if len(df_no_id_na) != len(self.df):
             warnings.warn(
                 "There is at least one missing value in your id variable. The missing value is automatically deleted.",
@@ -57,13 +61,13 @@ class Overview:
                 stacklevel=2,
             )
 
-        df_no_dup = df_clean.filter(items=[self.id, self.time]).drop_duplicates().copy()
+        df_no_dup = df_clean.filter(items=[self.id_col, self.time]).drop_duplicates().copy()
 
         if len(df_no_dup) != len(df_clean):
             warnings.warn("There are some duplicates. We aggregate the data before proceeding.", UserWarning, stacklevel=2)
 
-        df_sorted = df_no_dup.sort_values([self.id, self.time])
-        grouped = df_sorted.groupby(self.id)
+        df_sorted = df_no_dup.sort_values([self.id_col, self.time])
+        grouped = df_sorted.groupby(self.id_col)
 
         for _, group_df in grouped:
             numbers = group_df[self.time].tolist()
@@ -72,7 +76,7 @@ class Overview:
                 parts.append(f'{seg[0]}-{seg[-1]}' if len(seg) > 1 else str(seg[0]))
             df_no_dup.loc[group_df.index, 'time_frame'] = ', '.join(parts)
 
-        return df_no_dup[[self.id, 'time_frame']].sort_values([self.id]).drop_duplicates()
+        return df_no_dup[[self.id_col, 'time_frame']].sort_values([self.id_col]).drop_duplicates()
 
     def overview_summary(self) -> pd.DataFrame:
         """Returns a per-column summary of the data frame.
@@ -80,6 +84,7 @@ class Overview:
         Returns:
             pd.DataFrame: One row per column with non_null_count, unique_count, and sample_values.
         """
+        logger.debug('overview_summary: %d columns', len(self.df.columns))
         rows = []
         for col in self.df.columns:
             non_null = self.df[col].dropna()
@@ -90,7 +95,6 @@ class Overview:
                 'sample_values': list(non_null.unique()[:5]),
             })
         return pd.DataFrame(rows).set_index('column')
-
 
     def overview_crosstab(
         self,
@@ -112,13 +116,18 @@ class Overview:
         Returns:
             pd.DataFrame: 2x2 DataFrame where each cell lists id (time_frame) entries.
         """
-        df = self.df.dropna(subset=[self.id]).copy()
+        logger.debug('overview_crosstab: cond1=%r (>=%s), cond2=%r (>=%s)', cond1, threshold1, cond2, threshold2)
+        df = self.df.dropna(subset=[self.id_col]).copy()
         if len(df) != len(self.df):
-            print("There is a missing value in your id variable. The missing value is automatically deleted.")
+            warnings.warn(
+                "There is a missing value in your id variable. The missing value is automatically deleted.",
+                UserWarning,
+                stacklevel=2,
+            )
 
-        if len(df[[self.id, self.time]].drop_duplicates()) != len(df):
+        if len(df[[self.id_col, self.time]].drop_duplicates()) != len(df):
             df = (
-                df.groupby([self.id, self.time])[[cond1, cond2]]
+                df.groupby([self.id_col, self.time])[[cond1, cond2]]
                 .mean()
                 .reset_index()
             )
@@ -127,17 +136,17 @@ class Overview:
         df["_c2"] = (df[cond2] >= threshold2).astype(int)
 
         quadrants = {
-            "part1": df[(df["_c1"] == 1) & (df["_c2"] == 1)][[self.id, self.time]],
-            "part2": df[(df["_c1"] == 0) & (df["_c2"] == 1)][[self.id, self.time]],
-            "part3": df[(df["_c1"] == 1) & (df["_c2"] == 0)][[self.id, self.time]],
-            "part4": df[(df["_c1"] == 0) & (df["_c2"] == 0)][[self.id, self.time]],
+            "part1": df[(df["_c1"] == 1) & (df["_c2"] == 1)][[self.id_col, self.time]],
+            "part2": df[(df["_c1"] == 0) & (df["_c2"] == 1)][[self.id_col, self.time]],
+            "part3": df[(df["_c1"] == 1) & (df["_c2"] == 0)][[self.id_col, self.time]],
+            "part4": df[(df["_c1"] == 0) & (df["_c2"] == 0)][[self.id_col, self.time]],
         }
 
         def _fmt(qdf: pd.DataFrame) -> str:
             if qdf.empty:
                 return ""
-            tab = Overview(qdf.reset_index(drop=True), self.id, self.time).overview_tab()
-            return ", ".join(f"{row[self.id]} ({row['time_frame']})" for _, row in tab.iterrows())
+            tab = Overview(qdf.reset_index(drop=True), self.id_col, self.time).overview_tab()
+            return ", ".join(f"{row[self.id_col]} ({row['time_frame']})" for _, row in tab.iterrows())
 
         parts = {k: _fmt(v) for k, v in quadrants.items()}
 
@@ -150,16 +159,16 @@ class Overview:
     def overview_markdown(
         self,
         title: str = "Time and scope of the sample",
-        id: str = "Sample",
-        time: str = "Time frame",
+        id_label: str = "Sample",
+        time_label: str = "Time frame",
         file_path: str | None = None,
     ) -> str:
         """Generates a Markdown table from overview_tab output.
 
         Args:
             title: Heading displayed above the table.
-            id: Header for the id column (default: "Sample").
-            time: Header for the time frame column (default: "Time frame").
+            id_label: Header for the id column (default: "Sample").
+            time_label: Header for the time frame column (default: "Time frame").
             file_path: If provided, writes the output to this path as a .md file.
 
         Returns:
@@ -169,7 +178,7 @@ class Overview:
         lines = [
             f"## {title}",
             "",
-            f"| {id} | {time} |",
+            f"| {id_label} | {time_label} |",
             "|---|---|",
         ]
         for _, row in tab.iterrows():
@@ -180,6 +189,7 @@ class Overview:
         if file_path is not None:
             with open(file_path, "w") as f:
                 f.write(output)
+            logger.info('Markdown table written to %s', file_path)
 
         return output
 
@@ -220,11 +230,12 @@ class Overview:
             matplotlib.axes.Axes: Scatter plot with threshold lines.
         """
         agg = (
-            self.df.dropna(subset=[self.id])
-            .groupby([self.id, self.time])[[cond1, cond2]]
+            self.df.dropna(subset=[self.id_col])
+            .groupby([self.id_col, self.time])[[cond1, cond2]]
             .mean()
             .reset_index()
         )
+        logger.debug('overview_crossplot: %d aggregated (id, time) points', len(agg))
         agg["_grp"] = (
             (agg[cond1] >= threshold1).astype(int) * 2
             + (agg[cond2] >= threshold2).astype(int)
@@ -243,7 +254,7 @@ class Overview:
         ax.set_ylabel(yaxis)
 
         if label:
-            labels = agg[self.id].astype(str) + agg[self.time].astype(str)
+            labels = agg[self.id_col].astype(str) + " (" + agg[self.time].astype(str) + ")"
             for (x, y, txt) in zip(agg[cond1], agg[cond2], labels):
                 ax.annotate(txt, (x, y), fontsize=fontsize)
 
@@ -285,8 +296,9 @@ class Overview:
         if perc and exp_total is None:
             raise ValueError("exp_total must be provided when perc=True.")
 
+        logger.debug('overview_heat: perc=%s, exp_total=%s', perc, exp_total)
         counts = (
-            self.df.groupby([self.id, self.time])
+            self.df.groupby([self.id_col, self.time])
             .size()
             .reset_index(name="n")
         )
@@ -295,7 +307,7 @@ class Overview:
             counts["n"] = counts["n"] / exp_total * 100
 
         pivot = (
-            counts.pivot(index=self.id, columns=self.time, values="n")
+            counts.pivot(index=self.id_col, columns=self.time, values="n")
             .fillna(0)
             .sort_index()
         )
@@ -349,6 +361,7 @@ class Overview:
         Returns:
             matplotlib.axes.Axes when a plot is produced, or pd.DataFrame when add=True.
         """
+        logger.debug('overview_na: row_wise=%s, perc=%s', row_wise, perc)
         if row_wise:
             yaxis = "Observations"
             na_count = self.df.isna().sum(axis=1)
@@ -385,7 +398,7 @@ class Overview:
         show_plot: bool,
     ) -> matplotlib.axes.Axes:
         sorted_result = result.sort_values(x, ascending=True)
-        fig, ax = plt.subplots()
+        _, ax = plt.subplots()
         ax.barh(sorted_result["variable"].astype(str), sorted_result[x])
         ax.set_xlabel(xaxis)
         ax.set_ylabel(yaxis)
@@ -423,19 +436,20 @@ class Overview:
         Returns:
             matplotlib.axes.Axes: The resulting timeline plot.
         """
-        cols = [self.id, self.time]
+        cols = [self.id_col, self.time]
         if color is not None:
             cols.append(color)
 
         dat_red = (
             self.df[cols]
-            .dropna(subset=[self.id, self.time])
+            .dropna(subset=[self.id_col, self.time])
             .drop_duplicates()
-            .sort_values([self.id, self.time])
+            .sort_values([self.id_col, self.time])
             .reset_index(drop=True)
         )
 
-        ids_sorted = sorted(dat_red[self.id].unique(), key=str)
+        ids_sorted = sorted(dat_red[self.id_col].unique(), key=str)
+        logger.debug('overview_plot: %d unique ids', len(ids_sorted))
 
         if color is not None:
             color_vals = sorted(dat_red[color].dropna().unique(), key=str)
@@ -445,7 +459,7 @@ class Overview:
         fig, ax = plt.subplots()
 
         for y_pos, id_val in enumerate(ids_sorted):
-            id_data = dat_red[dat_red[self.id] == id_val].sort_values(self.time)
+            id_data = dat_red[dat_red[self.id_col] == id_val].sort_values(self.time)
             times = id_data[self.time].tolist()
 
             for seg in _consecutive_segments(times):
@@ -536,22 +550,56 @@ class Overview:
         Raises:
             ValueError: If plot_type is not "bar" or "venn".
         """
-        return overview_overlap(
-            self.df, dat2,
-            dat1_id=self.id,
-            dat2_id=dat2_id,
-            dat1_name=dat1_name,
-            dat2_name=dat2_name,
-            plot_type=plot_type,
-            show_plot=show_plot,
-        )
+        if plot_type not in ("bar", "venn"):
+            raise ValueError(f"plot_type must be 'bar' or 'venn', got {plot_type!r}")
+
+        set1 = set(self.df[self.id_col].dropna())
+        set2 = set(dat2[dat2_id].dropna())
+        logger.debug('overview_overlap: %d vs %d unique ids, plot_type=%r', len(set1), len(set2), plot_type)
+
+        if plot_type == "bar":
+            counts1 = self.df[self.id_col].value_counts().rename(dat1_name)
+            counts2 = dat2[dat2_id].value_counts().rename(dat2_name)
+            merged = pd.concat([counts1, counts2], axis=1).fillna(0).sort_index()
+
+            ax = merged.plot(kind="bar", color=["#dceaf2", "#2A5773"], edgecolor="gray", width=0.7)
+            ax.set_xlabel("Identifier")
+            ax.set_ylabel("Count (absolute number of observations)")
+            ax.set_title("Overlap of data sets")
+            ax.legend([dat1_name, dat2_name])
+
+            if show_plot:
+                plt.show()
+            return ax
+
+        only1 = len(set1 - set2)
+        only2 = len(set2 - set1)
+        both = len(set1 & set2)
+
+        _, ax = plt.subplots()
+        ax.add_patch(mpatches.Circle((0.35, 0.5), 0.3, color="#dceaf2", alpha=0.9))
+        ax.add_patch(mpatches.Circle((0.65, 0.5), 0.3, color="#2A5773", alpha=0.5))
+        ax.text(0.2, 0.5, str(only1), ha="center", va="center", fontsize=14, fontweight="bold")
+        ax.text(0.5, 0.5, str(both), ha="center", va="center", fontsize=14, fontweight="bold", color="white")
+        ax.text(0.8, 0.5, str(only2), ha="center", va="center", fontsize=14, fontweight="bold")
+        ax.text(0.25, 0.83, dat1_name, ha="center", va="center", fontsize=11)
+        ax.text(0.75, 0.83, dat2_name, ha="center", va="center", fontsize=11)
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0.1, 0.95)
+        ax.set_aspect("equal")
+        ax.axis("off")
+        ax.set_title("Overlap of data sets")
+
+        if show_plot:
+            plt.show()
+        return ax
 
     def overview_latex(
         self,
         obj: pd.DataFrame,
         title: str = "Time and scope of the sample",
-        id: str = "Sample",
-        time: str = "Time frame",
+        id_label: str = "Sample",
+        time_label: str = "Time frame",
         crosstab: bool = False,
         cond1: str = "Condition 1",
         cond2: str = "Condition 2",
@@ -562,11 +610,14 @@ class Overview:
     ) -> str:
         """Generate a LaTeX table from an overview_tab or overview_crosstab result.
 
+        Convenience wrapper around the standalone ``overview_latex`` function.
+        For full documentation see ``overview_latex``.
+
         Args:
             obj: DataFrame returned by overview_tab or overview_crosstab (must have exactly 2 columns).
             title: Caption of the table.
-            id: Header for the left column (ignored when crosstab=True).
-            time: Header for the right column (ignored when crosstab=True).
+            id_label: Header for the left column (ignored when crosstab=True).
+            time_label: Header for the right column (ignored when crosstab=True).
             crosstab: If True, renders a cross-tabulation layout (obj must have exactly 2 rows).
             cond1: Label for the first condition (used when crosstab=True).
             cond2: Label for the second condition (used when crosstab=True).
@@ -581,8 +632,8 @@ class Overview:
         return overview_latex(
             obj,
             title=title,
-            id=id,
-            time=time,
+            id_label=id_label,
+            time_label=time_label,
             crosstab=crosstab,
             cond1=cond1,
             cond2=cond2,
@@ -595,7 +646,7 @@ class Overview:
 
 def overview_crossplot(
     df: pd.DataFrame,
-    id: str,
+    id_col: str,
     time: str,
     cond1: str,
     cond2: str,
@@ -610,20 +661,20 @@ def overview_crossplot(
     show_plot: bool = True,
 ) -> matplotlib.axes.Axes:
     """Backward-compatible accessor for Overview.overview_crossplot. Deprecated since 0.2.0."""
-    return Overview(df, id, time).overview_crossplot(
+    return Overview(df, id_col, time).overview_crossplot(
         cond1, cond2, threshold1, threshold2,
         xaxis, yaxis, label, color, dot_size, fontsize, show_plot,
     )
 
 
-def overview_tab(df: pd.DataFrame, id: str, time: int) -> pd.DataFrame:
+def overview_tab(df: pd.DataFrame, id_col: str, time: int) -> pd.DataFrame:
     """Backward-compatible accessor for Overview.overview_tab. Deprecated since 0.2.0."""
-    return Overview(df, id, time).overview_tab()
+    return Overview(df, id_col, time).overview_tab()
 
 
 def overview_crosstab(
     df: pd.DataFrame,
-    id: str,
+    id_col: str,
     time: str,
     cond1: str,
     cond2: str,
@@ -631,7 +682,7 @@ def overview_crosstab(
     threshold2: float,
 ) -> pd.DataFrame:
     """Backward-compatible accessor for Overview.overview_crosstab. Deprecated since 0.2.0."""
-    return Overview(df, id, time).overview_crosstab(cond1, cond2, threshold1, threshold2)
+    return Overview(df, id_col, time).overview_crosstab(cond1, cond2, threshold1, threshold2)
 
 
 def overview_na(
@@ -650,7 +701,7 @@ def overview_na(
 
 def overview_heat(
     df: pd.DataFrame,
-    id: str,
+    id_col: str,
     time: str,
     perc: bool = False,
     exp_total: int | None = None,
@@ -662,7 +713,7 @@ def overview_heat(
     show_plot: bool = True,
 ) -> matplotlib.axes.Axes:
     """Backward-compatible accessor for Overview.overview_heat. Deprecated since 0.2.0."""
-    return Overview(df, id, time).overview_heat(
+    return Overview(df, id_col, time).overview_heat(
         perc=perc,
         exp_total=exp_total,
         xaxis=xaxis,
@@ -676,7 +727,7 @@ def overview_heat(
 
 def overview_markdown(
     df: pd.DataFrame,
-    id: str,
+    id_col: str,
     time: str,
     title: str = "Time and scope of the sample",
     id_label: str = "Sample",
@@ -684,29 +735,22 @@ def overview_markdown(
     file_path: str | None = None,
 ) -> str:
     """Backward-compatible accessor for Overview.overview_markdown. Deprecated since 0.2.0."""
-    return Overview(df, id, time).overview_markdown(
+    return Overview(df, id_col, time).overview_markdown(
         title=title,
-        id=id_label,
-        time=time_label,
+        id_label=id_label,
+        time_label=time_label,
         file_path=file_path,
     )
 
 
 def overview_summary(df: pd.DataFrame) -> pd.DataFrame:
-    """Returns a per-column summary of the data frame.
-
-    Args:
-        df (pd.DataFrame): Input data frame.
-
-    Returns:
-        pd.DataFrame: One row per column with non_null_count, unique_count, and sample_values.
-    """
+    """Backward-compatible accessor for Overview.overview_summary. Deprecated since 0.2.0."""
     return Overview(df, None, None).overview_summary()
 
 
 def overview_plot(
     df: pd.DataFrame,
-    id: str,
+    id_col: str,
     time: str,
     xaxis: str = "Time frame",
     yaxis: str = "Sample",
@@ -715,25 +759,8 @@ def overview_plot(
     dot_size: int = 2,
     show_plot: bool = True,
 ) -> matplotlib.axes.Axes:
-    """Visualizes the presence of observations across id and time.
-
-    Args:
-        df: Input data frame.
-        id: Column name for the unit identifier (e.g. country code).
-        time: Column name for the time variable (numeric, e.g. year).
-        xaxis: Label for the x-axis. Defaults to "Time frame".
-        yaxis: Label for the y-axis. Defaults to "Sample".
-        asc: If True, ids are displayed in ascending order from top to bottom.
-            Defaults to True.
-        color: Optional column name to color-code points by a third variable.
-            Defaults to None.
-        dot_size: Size of the plotted points. Defaults to 2.
-        show_plot: Whether to display the plot. Defaults to True.
-
-    Returns:
-        matplotlib.axes.Axes: The resulting timeline plot.
-    """
-    return Overview(df, id, time).overview_plot(
+    """Backward-compatible accessor for Overview.overview_plot. Deprecated since 0.2.0."""
+    return Overview(df, id_col, time).overview_plot(
         xaxis=xaxis,
         yaxis=yaxis,
         asc=asc,
@@ -753,73 +780,22 @@ def overview_overlap(
     plot_type: str = "bar",
     show_plot: bool = True,
 ) -> matplotlib.axes.Axes:
-    """Provides an overview of the overlap of two data sets.
-
-    Args:
-        dat1 (pd.DataFrame): First data set.
-        dat2 (pd.DataFrame): Second data set.
-        dat1_id (str): Column name of the ID variable in dat1.
-        dat2_id (str): Column name of the ID variable in dat2.
-        dat1_name (str): Label for dat1 in the plot. Defaults to "Data set 1".
-        dat2_name (str): Label for dat2 in the plot. Defaults to "Data set 2".
-        plot_type (str): Type of plot — "bar" for a grouped bar chart,
-                         "venn" for a Venn diagram. Defaults to "bar".
-        show_plot (bool): Whether to display the plot. Defaults to True.
-
-    Returns:
-        matplotlib.axes.Axes: A plot visualizing the overlap of the two data sets.
-
-    Raises:
-        ValueError: If plot_type is not "bar" or "venn".
-    """
-    if plot_type not in ("bar", "venn"):
-        raise ValueError(f"plot_type must be 'bar' or 'venn', got {plot_type!r}")
-
-    if plot_type == "bar":
-        counts1 = dat1[dat1_id].value_counts().rename(dat1_name)
-        counts2 = dat2[dat2_id].value_counts().rename(dat2_name)
-        merged = pd.concat([counts1, counts2], axis=1).fillna(0).sort_index()
-
-        ax = merged.plot(kind="bar", color=["#dceaf2", "#2A5773"], edgecolor="gray", width=0.7)
-        ax.set_xlabel("Identifier")
-        ax.set_ylabel("Count (absolute number of observations)")
-        ax.set_title("Overlap of data sets")
-        ax.legend([dat1_name, dat2_name])
-
-        if show_plot:
-            plt.show()
-        return ax
-
-    set1 = set(dat1[dat1_id].dropna())
-    set2 = set(dat2[dat2_id].dropna())
-    only1 = len(set1 - set2)
-    only2 = len(set2 - set1)
-    both = len(set1 & set2)
-
-    _, ax = plt.subplots()
-    ax.add_patch(mpatches.Circle((0.35, 0.5), 0.3, color="#dceaf2", alpha=0.9))
-    ax.add_patch(mpatches.Circle((0.65, 0.5), 0.3, color="#2A5773", alpha=0.5))
-    ax.text(0.2, 0.5, str(only1), ha="center", va="center", fontsize=14, fontweight="bold")
-    ax.text(0.5, 0.5, str(both), ha="center", va="center", fontsize=14, fontweight="bold", color="white")
-    ax.text(0.8, 0.5, str(only2), ha="center", va="center", fontsize=14, fontweight="bold")
-    ax.text(0.25, 0.83, dat1_name, ha="center", va="center", fontsize=11)
-    ax.text(0.75, 0.83, dat2_name, ha="center", va="center", fontsize=11)
-    ax.set_xlim(0, 1)
-    ax.set_ylim(0.1, 0.95)
-    ax.set_aspect("equal")
-    ax.axis("off")
-    ax.set_title("Overlap of data sets")
-
-    if show_plot:
-        plt.show()
-    return ax
+    """Backward-compatible accessor for Overview.overview_overlap. Deprecated since 0.2.0."""
+    return Overview(dat1, dat1_id, None).overview_overlap(
+        dat2,
+        dat2_id=dat2_id,
+        dat1_name=dat1_name,
+        dat2_name=dat2_name,
+        plot_type=plot_type,
+        show_plot=show_plot,
+    )
 
 
 def overview_latex(
     obj: pd.DataFrame,
     title: str = "Time and scope of the sample",
-    id: str = "Sample",
-    time: str = "Time frame",
+    id_label: str = "Sample",
+    time_label: str = "Time frame",
     crosstab: bool = False,
     cond1: str = "Condition 1",
     cond2: str = "Condition 2",
@@ -830,11 +806,16 @@ def overview_latex(
 ) -> str:
     """Generate a LaTeX table from an overview_tab or overview_crosstab result.
 
+    Unlike other functions in this module, ``overview_latex`` is a standalone
+    function rather than a method on ``Overview``, because it operates on the
+    already-formatted output of ``overview_tab`` or ``overview_crosstab`` rather
+    than on raw data. ``Overview.overview_latex`` delegates to this function.
+
     Args:
         obj: DataFrame returned by overview_tab or overview_crosstab (must have exactly 2 columns).
         title: Caption of the table.
-        id: Header for the left column (ignored when crosstab=True).
-        time: Header for the right column (ignored when crosstab=True).
+        id_label: Header for the left column (ignored when crosstab=True).
+        time_label: Header for the right column (ignored when crosstab=True).
         crosstab: If True, renders a cross-tabulation layout (obj must have exactly 2 rows).
         cond1: Label for the first condition (used when crosstab=True).
         cond2: Label for the second condition (used when crosstab=True).
@@ -888,7 +869,7 @@ def overview_latex(
             f"{fontsize_mod}"
             f"\\begin{{tabular}}{{ll}}\n"
             f" \\hline\n"
-            f"{id} & {time} \\\\ \\hline\n"
+            f"{id_label} & {time_label} \\\\ \\hline\n"
         )
         output += "".join(f"{row[0]} & {row[1]} \\\\\n" for row in mat)
         output += "\\hline\n \\end{tabular}\n \\end{table}\n"
@@ -923,7 +904,6 @@ def overview_latex(
     if save_out:
         with open(file_path, "w") as f:
             f.write(output)
-    else:
-        print(output)
+        logger.info('LaTeX table written to %s', file_path)
 
     return output

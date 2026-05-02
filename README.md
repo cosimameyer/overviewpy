@@ -50,7 +50,7 @@ data = {
 
 df = pd.DataFrame(data)
 
-overview = Overview(df=df, id='id', time='year')
+overview = Overview(df=df, id_col='id', time='year')
 df_overview = overview.overview_tab()
 ```
 
@@ -72,7 +72,7 @@ data_with_na = {
 df_na = pd.DataFrame(data_with_na)
 
 # UserWarning: missing id and time values are dropped automatically
-overview = Overview(df=df_na, id='id', time='year')
+overview = Overview(df=df_na, id_col='id', time='year')
 df_overview = overview.overview_tab()
 ```
 
@@ -93,7 +93,7 @@ data = {
 
 df = pd.DataFrame(data)
 
-overview = Overview(df=df, id='id', time='year')
+overview = Overview(df=df, id_col='id', time='year')
 print(overview.overview_markdown())
 ```
 
@@ -116,8 +116,8 @@ You can customise the title and column headers, and optionally save to a file:
 ```python
 overview.overview_markdown(
     title="My sample",
-    id="Country",
-    time="Years covered",
+    id_label="Country",
+    time_label="Years covered",
     file_path="output/sample_overview.md",
 )
 ```
@@ -145,7 +145,7 @@ data_na = {
 
 df_na = pd.DataFrame(data_na)
 
-ov_na = Overview(df=df_na, id='id', time='year')
+ov_na = Overview(df=df_na, id_col='id', time='year')
 
 # Default: column-wise, percentage
 ov_na.overview_na()
@@ -180,7 +180,7 @@ from overviewpy.overviewpy import Overview
 import pandas as pd
 
 df = pd.read_csv("mydata.csv")
-overview = Overview(df=df, id=None, time=None)
+overview = Overview(df=df, id_col=None, time=None)
 overview.overview_summary()
 ```
 
@@ -196,7 +196,7 @@ periods are connected by a line; gaps in coverage produce separate disconnected
 clusters. Optionally color-code points by a third variable.
 
 ```python
-from overviewpy.overviewpy import overview_plot
+from overviewpy.overviewpy import Overview
 import pandas as pd
 
 data = {
@@ -206,7 +206,8 @@ data = {
 
 df = pd.DataFrame(data)
 
-overview_plot(df, id='id', time='year')
+overview = Overview(df=df, id_col='id', time='year')
+overview.overview_plot()
 ```
 
 ![overview_plot output](docs/img/overview_plot.png)
@@ -215,7 +216,7 @@ You can color-code the points by a third variable using the `color` parameter:
 
 ```python
 # color-code points by a third variable
-overview_plot(df, id='id', time='year', color='regime')
+overview.overview_plot(color='regime')
 ```
 
 ![overview_plot output with color](docs/img/overview_plot_color.png)
@@ -232,7 +233,7 @@ data2 = {'id': ['RWA', 'GAB', 'GAB', 'ARG', 'ARG']}
 df2 = pd.DataFrame(data2)
 
 # Grouped bar chart (default)
-overview = Overview(df=df, id='id', time='year')
+overview = Overview(df=df, id_col='id', time='year')
 overview.overview_overlap(dat2=df2, dat2_id='id', dat1_name='Survey 1', dat2_name='Survey 2')
 ```
 
@@ -253,7 +254,7 @@ overview.overview_overlap(dat2=df2, dat2_id='id', dat1_name='Survey 1', dat2_nam
 from overviewpy.overviewpy import Overview
 import pandas as pd
 
-overview = Overview(df=df, id='id', time='year')
+overview = Overview(df=df, id_col='id', time='year')
 overview.overview_heat()
 ```
 
@@ -282,7 +283,7 @@ data = {
 }
 
 df = pd.DataFrame(data)
-overview = Overview(df=df, id='id', time='year')
+overview = Overview(df=df, id_col='id', time='year')
 
 # Basic plot
 overview.overview_crossplot(cond1='gdp', cond2='population',
@@ -317,11 +318,11 @@ data = {
    }
 
 df = pd.DataFrame(data)
-ovw = Overview(df=df, id='id', time='year')
+ovw = Overview(df=df, id_col='id', time='year')
 df_overview = ovw.overview_tab()
 
 # Print LaTeX to the console
-ovw.overview_latex(df_overview, title="Time and scope", id="Country", time="Years")
+ovw.overview_latex(df_overview, title="Time and scope", id_label="Country", time_label="Years")
 
 # Save directly to a .tex file
 ovw.overview_latex(df_overview, save_out=True, file_path="output.tex")
@@ -344,7 +345,7 @@ data = {
 }
 
 df = pd.DataFrame(data)
-ovw = Overview(df=df, id='id', time='year')
+ovw = Overview(df=df, id_col='id', time='year')
 
 ovw.overview_crosstab(
     cond1='gdp',
@@ -360,11 +361,11 @@ The result is a 2×2 `DataFrame` whose rows and columns are labelled by the thre
 
 If duplicate `(id, time)` pairs exist, the conditions are averaged before thresholding. Missing values in `id` are dropped automatically.
 
-##### Command line
+## Command line
 
 Alternatively, run the summarizer from the command line to generate an HTML report:
 
-##### Invocation
+### Invocation
 ```
 usage: $ python -m overviewpy [-h] [-d DELIMITER] [-t {csv}] [-o {file,stdout}] datafile
 
@@ -381,7 +382,7 @@ options:
                         Type of output desired. Defaults to creating an HTML file.
 ```
 
-##### Output
+### Output
 
 The default output is created as an HTML file in the same directory as the datafile passed in. The output file will be
 named with the stem of the datafile name and `-summary.html`. For example, if your datafile is named `magicdata.csv`,
