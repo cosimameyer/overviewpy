@@ -1,5 +1,8 @@
+import logging
 import pandas as pd
 import pathlib
+
+logger = logging.getLogger(__name__)
 
 
 _EXTENSION_TO_FILETYPE = {
@@ -29,10 +32,10 @@ class Summarizer:
             try:
                 df = pd.read_csv(datafile, delimiter=delimiter)
             except pd.errors.ParserError as err:
-                print(f'Unable to parse file {datafile.name}: {err}')
+                logger.error('Unable to parse file %s: %s', datafile.name, err)
                 df = None
             except UnicodeDecodeError:
-                print('Unable to decode file as UTF-8. Retrying with ISO-8859-1.')
+                logger.warning('Unable to decode file as UTF-8. Retrying with ISO-8859-1.')
                 df = pd.read_csv(datafile, delimiter=delimiter, encoding='ISO-8859-1')
         elif filetype == 'excel':
             df = pd.read_excel(datafile)

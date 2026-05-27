@@ -1,6 +1,10 @@
 # Changelog
 
 <!--next-version-placeholder-->
+## Unreleased
+
+- Added `overview_latex`: converts an `overview_tab` result into a LaTeX table. Supports custom title, column headers, label, font size, cross-tabulation layout, and optional `.tex` file export via `save_out`/`file_path`.
+
 ## v0.1.1 (06/10/2023)
 
 - Fixed minor bug in `overview_tab` causing problems in running the function using the `id` parameter
