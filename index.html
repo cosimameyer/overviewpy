@@ -1,0 +1,1498 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://cosimameyer.github.io/overviewpy/">
+      
+      
+      
+        <link rel="next" href="example/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>overviewpy</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#overviewpy" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="overviewpy" class="md-header__button md-logo" aria-label="overviewpy" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 6a6 6 0 0 1 6 6c0 2.22-1.21 4.16-3 5.2V19a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-1.8c-1.79-1.04-3-2.98-3-5.2a6 6 0 0 1 6-6m2 15v1a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-1zm6-10h3v2h-3zM1 11h3v2H1zM13 1v3h-2V1zM4.92 3.5l2.13 2.14-1.42 1.41L3.5 4.93zm12.03 2.13 2.12-2.13 1.43 1.43-2.13 2.12z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            overviewpy
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              overviewpy
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7M9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7M9 21v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1m3-17a5 5 0 0 0-5 5c0 2.05 1.23 3.81 3 4.58V16h4v-2.42c1.77-.77 3-2.53 3-4.58a5 5 0 0 0-5-5"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/cosimameyer/overviewpy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cosimameyer/overviewpy
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="overviewpy" class="md-nav__button md-logo" aria-label="overviewpy" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 6a6 6 0 0 1 6 6c0 2.22-1.21 4.16-3 5.2V19a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-1.8c-1.79-1.04-3-2.98-3-5.2a6 6 0 0 1 6-6m2 15v1a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-1zm6-10h3v2h-3zM1 11h3v2H1zM13 1v3h-2V1zM4.92 3.5l2.13 2.14-1.42 1.41L3.5 4.93zm12.03 2.13 2.12-2.13 1.43 1.43-2.13 2.12z"/></svg>
+
+    </a>
+    overviewpy
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/cosimameyer/overviewpy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cosimameyer/overviewpy
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    overviewpy
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    overviewpy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#implemented-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implemented Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implemented Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview_tab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overview_tab
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview_markdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overview_markdown
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview_na" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overview_na
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview_summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overview_summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview_plot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overview_plot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview_overlap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overview_overlap
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview_heat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overview_heat
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview_crossplot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overview_crossplot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview_latex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overview_latex
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview_crosstab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overview_crosstab
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#command-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command line
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Command line">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#invocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invocation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contributing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        License
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#credits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credits
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    News
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contribute
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contribute
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing guidelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#implemented-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implemented Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implemented Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview_tab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overview_tab
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview_markdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overview_markdown
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview_na" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overview_na
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview_summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overview_summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview_plot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overview_plot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview_overlap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overview_overlap
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview_heat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overview_heat
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview_crossplot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overview_crossplot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview_latex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overview_latex
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview_crosstab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overview_crosstab
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#command-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command line
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Command line">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#invocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invocation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contributing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        License
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#credits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credits
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="overviewpy">overviewpy<a class="headerlink" href="#overviewpy" title="Permanent link">&para;</a></h1>
+<p><img alt="PyPI" src="https://img.shields.io/pypi/v/overviewpy" /> <a href="http://github.com/badges/stability-badges"><img alt="experimental" src="http://badges.github.io/stability-badges/dist/experimental.svg" /></a>
+<img alt="CI/CD" src="https://github.com/cosimameyer/overviewpy/actions/workflows/ci-cd.yml/badge.svg" /> <img src='https://raw.githubusercontent.com/cosimameyer/overviewpy/main/docs/img/overviewpy.png' align="right" width="200px" /></p>
+<p>overviewpy aims to make it easy to get an overview of a data set by displaying relevant sample information. </p>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">$ pip install overviewpy
+</code></pre>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+<h3 id="implemented-functions">Implemented Functions<a class="headerlink" href="#implemented-functions" title="Permanent link">&para;</a></h3>
+<p>The goal of <code>overviewpy</code> is to make it easy to get an overview of a data set by displaying relevant sample information. At the moment, there are the following functions:</p>
+<ul>
+<li><code>overview_tab</code> generates a tabular overview of the sample (and returns a data frame). The general sample plots a two-column table that provides information on an id in the left column and a the time frame on the right column.</li>
+<li><code>overview_markdown</code> converts the output of <code>overview_tab</code> into a Markdown table that can be copy-pasted into any Markdown document or saved as a <code>.md</code> file.</li>
+<li><code>overview_na</code> plots an overview of missing values by variable (both by row and by column)</li>
+<li><code>overview_summary</code> returns a per-column summary of any data frame (non-null count, unique count, sample values)</li>
+<li><code>overview_plot</code> visualizes observation presence across id and time as a connected dot-plot</li>
+<li><code>overview_overlap</code> plots comparison plots (bar chart or Venn diagram) to compare the ID coverage of two data frames</li>
+<li><code>overview_heat</code> plots a heat map of observation counts (or percentages) for each id-time combination</li>
+<li><code>overview_crossplot</code> plots a scatter of two conditions split by their thresholds, dividing observations into four quadrants</li>
+<li><code>overview_crosstab</code> sorts observations into a 2×2 cross table based on two conditions and their thresholds</li>
+<li><code>overview_latex</code> converts the output of <code>overview_tab</code> or <code>overview_crosstab</code> into a LaTeX table, which can be printed or saved directly as a <code>.tex</code> file.</li>
+</ul>
+<h4 id="overview_tab"><code>overview_tab</code><a class="headerlink" href="#overview_tab" title="Permanent link">&para;</a></h4>
+<p>Generate some general overview of the data set using the time and scope
+conditions with <code>overview_tab</code>. The resulting data frame collapses the time condition for each <code>id</code> by
+taking into account potential gaps in the time frame.</p>
+<p>Rows with missing values in either the <code>id</code> or <code>time</code> column are automatically
+dropped and a <code>UserWarning</code> is raised for each affected variable.</p>
+<pre><code class="language-python">from overviewpy.overview import Overview
+import pandas as pd
+
+data = {
+       'id': ['RWA', 'RWA', 'RWA', 'GAB', 'GAB', 'FRA', \
+        'FRA', 'BEL', 'BEL', 'ARG'],
+       'year': [2022, 2023, 2021, 2023, 2020, 2019, 2015, \
+        2014, 2013, 2002]
+   }
+
+df = pd.DataFrame(data)
+
+overview = Overview(df=df, id_col='id', time='year')
+df_overview = overview.overview_tab()
+</code></pre>
+<p>The output is a data frame with one row per id and a <code>time_frame</code> column that compresses consecutive years into ranges (e.g. <code>2021-2023</code>) and non-consecutive years as a comma-separated list (e.g. <code>2015, 2019</code>):</p>
+<p><img alt="overview_tab output" src="docs/img/overview_tab.png" /></p>
+<p>If your data contains missing values in <code>id</code> or <code>year</code>, they are silently
+removed and you will see a warning — no extra preprocessing needed:</p>
+<pre><code class="language-python">import numpy as np
+
+data_with_na = {
+    'id': ['RWA', 'RWA', np.nan, 'GAB'],
+    'year': [2022, np.nan, 2021, 2020],
+}
+
+df_na = pd.DataFrame(data_with_na)
+
+# UserWarning: missing id and time values are dropped automatically
+overview = Overview(df=df_na, id_col='id', time='year')
+df_overview = overview.overview_tab()
+</code></pre>
+<h4 id="overview_markdown"><code>overview_markdown</code><a class="headerlink" href="#overview_markdown" title="Permanent link">&para;</a></h4>
+<p><code>overview_markdown</code> converts the output of <code>overview_tab</code> into a Markdown table. The result can be printed, copy-pasted into any Markdown document, or saved directly as a <code>.md</code> file.</p>
+<pre><code class="language-python">from overviewpy.overview import Overview
+import pandas as pd
+
+data = {
+       'id': ['RWA', 'RWA', 'RWA', 'GAB', 'GAB', 'FRA', \
+        'FRA', 'BEL', 'BEL', 'ARG'],
+       'year': [2022, 2023, 2021, 2023, 2020, 2019, 2015, \
+        2014, 2013, 2002]
+   }
+
+df = pd.DataFrame(data)
+
+overview = Overview(df=df, id_col='id', time='year')
+print(overview.overview_markdown())
+</code></pre>
+<p>This produces:</p>
+<pre><code class="language-markdown">## Time and scope of the sample
+
+| Sample | Time frame |
+|---|---|
+| ARG | 2002 |
+| BEL | 2013-2014 |
+| FRA | 2015, 2019 |
+| GAB | 2020, 2023 |
+| RWA | 2021-2023 |
+</code></pre>
+<p>You can customise the title and column headers, and optionally save to a file:</p>
+<pre><code class="language-python">overview.overview_markdown(
+    title=&quot;My sample&quot;,
+    id_label=&quot;Country&quot;,
+    time_label=&quot;Years covered&quot;,
+    file_path=&quot;output/sample_overview.md&quot;,
+)
+</code></pre>
+<h4 id="overview_na"><code>overview_na</code><a class="headerlink" href="#overview_na" title="Permanent link">&para;</a></h4>
+<p><code>overview_na</code> visualises missing values in your data. It returns a
+horizontal bar plot showing the amount of missing data (NAs) for each variable,
+sorted from most to least missing. By default it shows percentages (<code>perc=True</code>);
+pass <code>perc=False</code> to display absolute counts instead. Switch to <code>row_wise=True</code>
+for a per-observation view, or set <code>add=True</code> to append the NA statistics
+directly to your data frame.</p>
+<pre><code class="language-python">from overviewpy.overview import Overview
+import pandas as pd
+import numpy as np
+
+data_na = {
+        'id': ['RWA', 'RWA', 'RWA', np.nan, 'GAB', 'GAB',\
+            'FRA', 'FRA', 'BEL', 'BEL', 'ARG', np.nan,  np.nan],
+        'year': [2022, 2001, 2000, 2023, 2021, 2023, 2020, \
+            2019,  np.nan, 2015, 2014, 2013, 2002]
+    }
+
+df_na = pd.DataFrame(data_na)
+
+ov_na = Overview(df=df_na, id_col='id', time='year')
+
+# Default: column-wise, percentage
+ov_na.overview_na()
+
+# Absolute counts instead of percentage
+ov_na.overview_na(perc=False)
+
+# Custom y-axis label
+ov_na.overview_na(yaxis=&quot;My Variables&quot;)
+
+# Row-wise: one bar per observation
+ov_na.overview_na(row_wise=True)
+
+# Row-wise and augment the data frame with na_count and percentage columns
+df_with_na = ov_na.overview_na(row_wise=True, add=True)
+</code></pre>
+<p>Column-wise output (default):</p>
+<p><img alt="overview_na column-wise" src="docs/img/overview_na_column.png" /></p>
+<p>Row-wise output:</p>
+<p><img alt="overview_na row-wise" src="docs/img/overview_na_row.png" /></p>
+<h4 id="overview_summary"><code>overview_summary</code><a class="headerlink" href="#overview_summary" title="Permanent link">&para;</a></h4>
+<p>Use <code>overview_summary</code> to get a quick structured overview of any data frame:</p>
+<pre><code class="language-python">from overviewpy.overview import Overview
+import pandas as pd
+
+df = pd.read_csv(&quot;mydata.csv&quot;)
+overview = Overview(df=df, id_col=None, time=None)
+overview.overview_summary()
+</code></pre>
+<p>This returns a data frame with one row per column containing <code>non_null_count</code>, <code>unique_count</code>, and <code>sample_values</code>:</p>
+<p><img alt="overview_summary output" src="docs/img/overview_summary.png" /></p>
+<h4 id="overview_plot"><code>overview_plot</code><a class="headerlink" href="#overview_plot" title="Permanent link">&para;</a></h4>
+<p><code>overview_plot</code> visualizes the presence of observations across the id and time
+dimensions. Each id appears as a row; time is on the x-axis. Consecutive time
+periods are connected by a line; gaps in coverage produce separate disconnected
+clusters. Optionally color-code points by a third variable.</p>
+<pre><code class="language-python">from overviewpy.overview import Overview
+import pandas as pd
+
+data = {
+    'id': ['RWA', 'RWA', 'RWA', 'GAB', 'GAB', 'FRA', 'FRA', 'BEL', 'BEL', 'ARG'],
+    'year': [2022, 2023, 2021, 2023, 2020, 2019, 2015, 2014, 2013, 2002]
+}
+
+df = pd.DataFrame(data)
+
+overview = Overview(df=df, id_col='id', time='year')
+overview.overview_plot()
+</code></pre>
+<p><img alt="overview_plot output" src="docs/img/overview_plot.png" /></p>
+<p>You can color-code the points by a third variable using the <code>color</code> parameter:</p>
+<pre><code class="language-python"># color-code points by a third variable
+overview.overview_plot(color='regime')
+</code></pre>
+<p><img alt="overview_plot output with color" src="docs/img/overview_plot_color.png" /></p>
+<h4 id="overview_overlap"><code>overview_overlap</code><a class="headerlink" href="#overview_overlap" title="Permanent link">&para;</a></h4>
+<p><code>overview_overlap</code> compares two data frames by visualizing how much their ID columns overlap. Use <code>plot_type="bar"</code> (default) for a grouped bar chart showing observation counts per identifier, or <code>plot_type="venn"</code> for a two-set Venn diagram.</p>
+<pre><code class="language-python">from overviewpy.overview import Overview
+import pandas as pd
+
+data2 = {'id': ['RWA', 'GAB', 'GAB', 'ARG', 'ARG']}
+df2 = pd.DataFrame(data2)
+
+# Grouped bar chart (default)
+overview = Overview(df=df, id_col='id', time='year')
+overview.overview_overlap(dat2=df2, dat2_id='id', dat1_name='Survey 1', dat2_name='Survey 2')
+</code></pre>
+<p><img alt="overview_overlap bar chart" src="docs/img/overview_overlap_bar.png" /></p>
+<pre><code class="language-python"># Venn diagram
+overview.overview_overlap(dat2=df2, dat2_id='id', dat1_name='Survey 1', dat2_name='Survey 2', plot_type='venn')
+</code></pre>
+<p><img alt="overview_overlap Venn diagram" src="docs/img/overview_overlap_venn.png" /></p>
+<h4 id="overview_heat"><code>overview_heat</code><a class="headerlink" href="#overview_heat" title="Permanent link">&para;</a></h4>
+<p><code>overview_heat</code> plots a heat map that shows how many observations exist for each id-time combination. Set <code>perc=True</code> together with <code>exp_total</code> to display coverage as a percentage of the expected maximum.</p>
+<pre><code class="language-python">from overviewpy.overview import Overview
+import pandas as pd
+
+overview = Overview(df=df, id_col='id', time='year')
+overview.overview_heat()
+</code></pre>
+<p><img alt="overview_heat absolute" src="docs/img/overview_heat.png" /></p>
+<pre><code class="language-python"># Percentage view
+overview.overview_heat(perc=True, exp_total=3)
+</code></pre>
+<p><img alt="overview_heat percentage" src="docs/img/overview_heat_perc.png" /></p>
+<h4 id="overview_crossplot"><code>overview_crossplot</code><a class="headerlink" href="#overview_crossplot" title="Permanent link">&para;</a></h4>
+<p><code>overview_crossplot</code> visualises two conditions against user-defined thresholds. Each observation is placed at its mean <code>cond1</code>/<code>cond2</code> values after aggregating to unique (id, time) pairs. Vertical and horizontal threshold lines divide the plot into four quadrants.</p>
+<pre><code class="language-python">from overviewpy.overview import Overview
+import pandas as pd
+
+data = {
+    'id': ['RWA', 'RWA', 'GAB', 'GAB', 'FRA'],
+    'year': [2020, 2021, 2020, 2021, 2020],
+    'gdp': [10000, 30000, 20000, 50000, 26000],
+    'population': [12000000, 13000000, 2000000, 2100000, 68000000],
+}
+
+df = pd.DataFrame(data)
+overview = Overview(df=df, id_col='id', time='year')
+
+# Basic plot
+overview.overview_crossplot(cond1='gdp', cond2='population',
+                            threshold1=25000, threshold2=27000000)
+</code></pre>
+<p><img alt="overview_crossplot basic" src="docs/img/overview_crossplot.png" /></p>
+<pre><code class="language-python"># With quadrant coloring and point labels
+overview.overview_crossplot(cond1='gdp', cond2='population',
+                            threshold1=25000, threshold2=27000000,
+                            color=True, label=True,
+                            xaxis=&quot;GDP per capita&quot;, yaxis=&quot;Population&quot;)
+</code></pre>
+<p><img alt="overview_crossplot with color and labels" src="docs/img/overview_crossplot_color.png" /></p>
+<h4 id="overview_latex"><code>overview_latex</code><a class="headerlink" href="#overview_latex" title="Permanent link">&para;</a></h4>
+<p>Use <code>overview_latex</code> to export the result of <code>overview_tab</code> as a LaTeX table:</p>
+<pre><code class="language-python">from overviewpy.overview import Overview
+import pandas as pd
+
+data = {
+       'id': ['RWA', 'RWA', 'RWA', 'GAB', 'GAB', 'FRA',
+               'FRA', 'BEL', 'BEL', 'ARG'],
+       'year': [2022, 2023, 2021, 2023, 2020, 2019, 2015,
+                2014, 2013, 2002]
+   }
+
+df = pd.DataFrame(data)
+ovw = Overview(df=df, id_col='id', time='year')
+df_overview = ovw.overview_tab()
+
+# Print LaTeX to the console
+ovw.overview_latex(df_overview, title=&quot;Time and scope&quot;, id_label=&quot;Country&quot;, time_label=&quot;Years&quot;)
+
+# Save directly to a .tex file
+ovw.overview_latex(df_overview, save_out=True, file_path=&quot;output.tex&quot;)
+</code></pre>
+<h4 id="overview_crosstab"><code>overview_crosstab</code><a class="headerlink" href="#overview_crosstab" title="Permanent link">&para;</a></h4>
+<p><code>overview_crosstab</code> sorts a dataset into a 2×2 cross table based on two numeric conditions and their thresholds. Each cell lists the id–time entries that fall into that quadrant.</p>
+<pre><code class="language-python">from overviewpy.overview import Overview
+import pandas as pd
+
+data = {
+    'id':  ['RWA', 'RWA', 'GAB', 'GAB', 'FRA', 'FRA', 'BEL', 'BEL', 'ARG'],
+    'year': [2020,  2021,  2020,  2021,  2020,  2021,  2020,  2021,  2020],
+    'gdp':  [30000, 32000, 20000, 21000, 35000, 36000, 15000, 15500, 28000],
+    'pop':  [13000000, 13500000, 2300000, 2400000, 67000000, 68000000,
+             11500000, 11600000, 45000000],
+}
+
+df = pd.DataFrame(data)
+ovw = Overview(df=df, id_col='id', time='year')
+
+ovw.overview_crosstab(
+    cond1='gdp',
+    cond2='pop',
+    threshold1=25000,
+    threshold2=10000000,
+)
+</code></pre>
+<p>The result is a 2×2 <code>DataFrame</code> whose rows and columns are labelled by the threshold conditions:</p>
+<p><img alt="overview_crosstab output" src="docs/img/overview_crosstab.png" /></p>
+<p>If duplicate <code>(id, time)</code> pairs exist, the conditions are averaged before thresholding. Missing values in <code>id</code> are dropped automatically.</p>
+<h2 id="command-line">Command line<a class="headerlink" href="#command-line" title="Permanent link">&para;</a></h2>
+<p>Alternatively, run the summarizer from the command line to generate an HTML report:</p>
+<h3 id="invocation">Invocation<a class="headerlink" href="#invocation" title="Permanent link">&para;</a></h3>
+<pre><code>usage: $ python -m overviewpy [-h] [-d DELIMITER] [-t {csv}] [-o {file,stdout}] datafile
+
+positional arguments:
+  datafile              The data file to read. Expects a path to a readable data file.
+
+options:
+  -h, --help            show this help message and exit
+  -d DELIMITER, --delimiter DELIMITER
+                        Define the character(s) which delimit the file. Defaults to ','.
+  -t {csv,excel,fwf}, --filetype {csv,excel,fwf}
+                        File type to parse the datafile with. Inferred from the file extension if omitted.
+  -o {file,stdout}, --output-type {file,stdout}
+                        Type of output desired. Defaults to creating an HTML file.
+</code></pre>
+<h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
+<p>The default output is created as an HTML file in the same directory as the datafile passed in. The output file will be
+named with the stem of the datafile name and <code>-summary.html</code>. For example, if your datafile is named <code>magicdata.csv</code>,
+the output file would be <code>magicdata-summary.html</code></p>
+<p>The output file will list, at the top, some summary information about the number of rows and columns in the file.</p>
+<p>Below that frontmatter is a table listing, for each included column in the file:</p>
+<ol>
+<li>The column name</li>
+<li>The number of non-null/empty values for that column</li>
+<li>The number of unique non-null values for that column</li>
+<li>A set of 5 example values found in that column.</li>
+</ol>
+<h2 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">&para;</a></h2>
+<p>Interested in contributing? Check out the <a href="/CONTRIBUTING.md">contributing guidelines</a>. Please note that this project is released with a <a href="/CONDUCT.md">Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
+<h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
+<p><code>overviewpy</code> is licensed under the terms of the BSD 3-Clause license.</p>
+<h2 id="credits">Credits<a class="headerlink" href="#credits" title="Permanent link">&para;</a></h2>
+<p><code>overviewpy</code> was created with <a href="https://cookiecutter.readthedocs.io/en/latest/"><code>cookiecutter</code></a> and the <code>py-pkgs-cookiecutter</code> <a href="https://github.com/py-pkgs/py-pkgs-cookiecutter">template</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2023 – <a href="#__consent">Change cookie settings</a>
+
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+
+
+<h4>Cookie consent</h4>
+<p>I took great care to disable all third party cookies and scripts. However, there might be some cookies left which would like to be used. </p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+    
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="github" >
+      <span class="task-list-indicator"></span>
+      GitHub
+    </label>
+  </li>
+
+      
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="analytics" >
+      <span class="task-list-indicator"></span>
+      Google Analytics
+    </label>
+  </li>
+
+      
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Accept</button>
+    
+    
+    
+  
+    
+    
+      <button type="reset" class="md-button md-button--primary">Reject</button>
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Manage settings</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["search.highlight"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
